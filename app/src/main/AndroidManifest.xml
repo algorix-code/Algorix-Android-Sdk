@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.test.alxad.demo">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name=".MainApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".alxad.AlxAdDemoListActivity" />
+        <activity android:name=".alxad.AlxBannerDemoActivity" />
+        <activity android:name=".alxad.AlxRewardVideoDemoActivity"/>
+        <activity android:name=".toponad.TopOnAdDemoListActivity"/>
+        <activity android:name=".toponad.TopOnBannerDemoActivity" />
+        <activity android:name=".toponad.TopOnVideoDemoActivity" />
+        <!-- android:name="ALX_LICENSE" -->
+        <!-- android:value="10f0e186e95b3ee597804f65831e5359" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="ALX_KEY" -->
+        <!-- android:value="30012" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="ALX_APP_ID" -->
+        <!-- android:value="2a4a1e38839977ecd152f89c01f66683" /> -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
+        <meta-data
+            android:name="ALX_LICENSE"
+            android:value="7b9f41d06393fcdae195e0fbaee34923Y5" />
+        <meta-data
+            android:name="ALX_KEY"
+            android:value="60023" />
+        <meta-data
+            android:name="ALX_APP_ID"
+            android:value="246a96361196f62202e6033f2e44720eY4" />
+    </application>
+
+</manifest>
