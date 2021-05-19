@@ -33,27 +33,27 @@ Adapt to Android7.0
 
 Adapt to Android7.0 and above If your application needs to run on Android7.0 and above, please add the following code in AndroidManifest.
 
-
-<provider
-     android:name="com.alxad.provider.AlxFileProvider"
-     android:authorities="${applicationId}.alxfileprovider"
-     android:exported="false"
-     android:grantUriPermissions="true">
-     <meta-data
-         android:name="android.support.FILE_PROVIDER_PATHS"
-         android:resource="@xml/alx_file_path" />
-</provider>
+   <provider
+      android:name="com.alxad.provider.AlxFileProvider"
+      android:authorities="${applicationId}.alxfileprovider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/alx_file_path" />
+   </provider>
 
 In the res/xml directory, create a new xml file alx_file_path.xml, and add the following code to the file:
 
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-     <paths>
+     <?xml version="1.0" encoding="utf-8"?>
+
+     <resources>
+      <paths>
          <external-path
              name="external_files"
              path="." />
-     </paths>
-</resources>
+      </paths>
+     </resources>
 
 Environment
 
