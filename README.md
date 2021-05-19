@@ -1,23 +1,32 @@
 Import SDK
 dependent jar packages Copy the alx....aar in the SDKcompressed package to the Application Module/libs folder (if not, you must create it manually), and add the following code to the build.gradle of your Moudle app: //The project Application name exported by Unity is generally unityLibrary 
+
 repositories {
      flatDir {
          dirs'libs'
      }
 }
+
+
 depedencies {
      compile(name:'alx.*.*.*', ext:'aar') //Change to the specific version number by yourself
 
 }
+
 Permissions
+
 Alx SDK recommends that you add the following permissions, and it is recommended to declare to the developer in your privacy agreement that Alx SDK will obtain the following permissions and apply them to advertising.
+
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+
 Adapt to Android7.0
+
 Adapt to Android7.0 and above If your application needs to run on Android7.0 and above, please add the following code in AndroidManifest.
+
 
 <provider
      android:name="com.alxad.provider.AlxFileProvider"
