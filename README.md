@@ -1,4 +1,4 @@
-Import SDK
+<h2>Import SDK</h2>
 dependent jar packages Copy the alx....aar in the SDKcompressed package to the Application Module/libs folder (if not, you must create it manually), and add the following code to the build.gradle of your Moudle app: //The project Application name exported by Unity is generally unityLibrary 
 
      repositories {
