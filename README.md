@@ -16,7 +16,7 @@ dependent jar packages Copy the alx....aar in the SDKcompressed package to the A
 
      }
 
-Permissions
+<h2>Permissions</h2>
 
 Alx SDK recommends that you add the following permissions, and it is recommended to declare to the developer in your privacy agreement that Alx SDK will obtain the following permissions and apply them to advertising.
 
@@ -26,7 +26,7 @@ Alx SDK recommends that you add the following permissions, and it is recommended
      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
-Adapt to Android7.0
+<h2>Adapt to Android7.0</h2>
 
 Adapt to Android7.0 and above If your application needs to run on Android7.0 and above, please add the following code in AndroidManifest.
 
@@ -52,17 +52,17 @@ In the res/xml directory, create a new xml file alx_file_path.xml, and add the f
       </paths>
      </resources>
 
-Environment
+<h2>Environment</h2>
 
 Operating environment configuration This SDK can run on Android4.0 (API Level 14) and above. If the developer declares that the targetSdkVersion is above API 23, please ensure that you have applied for all the permissions required by the SDK before calling any interface of this SDK, otherwise some features of the SDK may be restricted.
 
-Code obfuscation
+<h2>Code obfuscation</h2>
 
 Code obfuscation settings Add the following to the .pro file in the App folder (usually called proguard-rules.pro in Android, and proguard-unity.txt exported by Unity):
 
      -keep class com.alxad.** {*;}
 
-Support
+<h2>Support</h2>
 
 Alx sdk supports banner and Reward Viedo Adapt to Admob Mopub Topon. More information see the code in the demo
 
