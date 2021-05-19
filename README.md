@@ -10,11 +10,11 @@ dependent jar packages Copy the alx....aar in the SDKcompressed package to the A
 
 
 
-depedencies {
+     depedencies {
 
      compile(name:'alx.*.*.*', ext:'aar') //Change to the specific version number by yourself
 
-}
+     }
 
 Permissions
 
