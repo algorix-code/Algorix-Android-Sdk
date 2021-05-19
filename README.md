@@ -59,7 +59,7 @@ Operating environment configuration This SDK can run on Android4.0 (API Level 14
 Code obfuscation
 
 Code obfuscation settings Add the following to the .pro file in the App folder (usually called proguard-rules.pro in Android, and proguard-unity.txt exported by Unity):
--keep class com.alxad.** {*;}
+     -keep class com.alxad.** {*;}
 
 Support
 
