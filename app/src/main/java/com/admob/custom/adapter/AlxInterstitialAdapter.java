@@ -1,126 +1,260 @@
-//package com.admob.custom.adapter;
-//
-//import android.content.Context;
-//import android.os.Bundle;
-//import android.text.TextUtils;
-//import android.util.Log;
-//
-//import com.alxad.api.AlxAdSDK;
-//import com.alxad.base.AlxConst;
-//import com.google.android.gms.ads.AdError;
-//import com.google.android.gms.ads.mediation.MediationAdRequest;
-//import com.google.android.gms.ads.mediation.customevent.CustomEventInterstitial;
-//import com.google.android.gms.ads.mediation.customevent.CustomEventInterstitialListener;
-//
-//import org.json.JSONObject;
-//
-//public class AlxInterstitialAdapter implements CustomEventInterstitial {
-//
-//    private static final String TAG = "AlxInterstitialAdapter";
-//    private String unitid = "";
-//    private String appid = "";
-//    private String appkey = "";
-//    private String license = "";
-//    private Boolean isdebug = false;
-//    private CustomEventInterstitialListener mListener;
-//
-//    @Override
-//    public void requestInterstitialAd(Context context, CustomEventInterstitialListener customEventInterstitialListener, String s, MediationAdRequest mediationAdRequest, Bundle bundle) {
-//        Log.i(TAG, "loadCustomNetworkAd");
-//        mListener=customEventInterstitialListener;
-//        parseServer(context, s);
-//        if (TextUtils.isEmpty(appid)) {
-//            if (mListener != null) {
-//                Log.i(TAG, "alx appid is empty");
-//                AdError error = new AdError(1, "alx appid is empty.", AlxConst.AD_NETWORK_NAME);
-//                mListener.onAdFailedToLoad(error);
-//            }
-//            return;
-//        }
-//
-//        if (TextUtils.isEmpty(appkey)) {
-//            if (mListener != null) {
-//                Log.i(TAG, "alx appkey is empty");
-//                AdError error = new AdError(1, "alx appkey is empty.", AlxConst.AD_NETWORK_NAME);
-//                mListener.onAdFailedToLoad(error);
-//            }
-//            return;
-//        }
-//
-//        if (TextUtils.isEmpty(unitid)) {
-//            if (mListener != null) {
-//                Log.i(TAG, "alx unitid is empty");
-//                AdError error = new AdError(1, "alx unitid is empty.", AlxConst.AD_NETWORK_NAME);
-//                mListener.onAdFailedToLoad(error);
-//            }
-//            return;
-//        }
-//
-//        if (TextUtils.isEmpty(license)) {
-//            if (mListener != null) {
-//                Log.i(TAG, "alx license is empty");
-//                AdError error = new AdError(1, "alx license is empty.", AlxConst.AD_NETWORK_NAME);
-//                mListener.onAdFailedToLoad(error);
-//            }
-//            return;
-//        }
-//
-//        try {
-//            Log.i(TAG, "alx license: " + license + " alx appkey: " + appkey + "alx appid: " + appid);
-//            AlxAdSDK.init(context, license, appkey, appid);
-//            AlxAdSDK.setDebug(isdebug);
-//        } catch (Exception e) {
-//            Log.e(TAG, e.getMessage());
-//            e.printStackTrace();
-//            if (mListener != null) {
-//                Log.i(TAG, "alx sdk init error");
-//                AdError error = new AdError(1, "alx sdk init error", AlxConst.AD_NETWORK_NAME);
-//                mListener.onAdFailedToLoad(error);
-//            }
-//            return;
-//        }
-//
-//        preloadAd();//预加载广告
-//
-//    }
-//
-//    @Override
-//    public void showInterstitial() {
-//
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//
-//    }
-//
-//    @Override
-//    public void onResume() {
-//
-//    }
-//
-//    private void parseServer(Context context, String s) {
-//        if (TextUtils.isEmpty(s)) {
-//            return;
-//        }
-//        try {
-//            JSONObject json = new JSONObject(s);
-//            appid = json.getString("appid");
-//            appkey = json.getString("appkey");
-//            unitid = json.getString("unitid");
-//            license = json.getString("license");
-//            isdebug = json.optBoolean("isdebug");
-//        } catch (Exception e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//    }
-//
-//    private void preloadAd(){
-//
-//    }
-//}
+package com.admob.custom.adapter;
+
+import android.app.Activity;
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.alxad.api.AlxAdSDK;
+import com.alxad.api.AlxInterstitialAD;
+import com.alxad.api.AlxInterstitialADListener;
+import com.alxad.api.AlxSdkInitCallback;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.mediation.Adapter;
+import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
+import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
+import com.google.android.gms.ads.mediation.MediationConfiguration;
+import com.google.android.gms.ads.mediation.MediationInterstitialAd;
+import com.google.android.gms.ads.mediation.MediationInterstitialAdCallback;
+import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration;
+import com.google.android.gms.ads.mediation.VersionInfo;
+
+import org.json.JSONObject;
+
+import java.util.List;
+
+/**
+ * Google Mobile ads AlgoriX Interstitial Adapter
+ */
+public class AlxInterstitialAdapter extends Adapter implements MediationInterstitialAd {
+
+    private static final String TAG = "AlxInterstitialAdapter";
+
+    private String unitid = "";
+    private String appid = "";
+    private String sid = "";
+    private String token = "";
+    private Boolean isdebug = false;
+
+    private MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> mMediationLoadCallback;
+    private MediationInterstitialAdCallback mMediationEventCallback;
+
+    AlxInterstitialAD interstitialAd;
+
+    @Override
+    public void initialize(Context context, InitializationCompleteCallback initializationCompleteCallback, List<MediationConfiguration> list) {
+        Log.d(TAG, "alx-admob-adapter: initialize");
+        if (context == null) {
+            initializationCompleteCallback.onInitializationFailed(
+                    "Initialization Failed: Context is null.");
+            return;
+        }
+        initializationCompleteCallback.onInitializationSucceeded();
+    }
+
+    @Override
+    public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
+        Log.d(TAG, "alx-admob-adapter: loadInterstitialAd " + Thread.currentThread().getName());
+        mMediationLoadCallback = callback;
+        String parameter = configuration.getServerParameters().getString("parameter");
+        if (!TextUtils.isEmpty(parameter)) {
+            parseServer(parameter);
+        }
+        initSdk(configuration.getContext());
+    }
+
+    private void initSdk(final Context context) {
+        if (TextUtils.isEmpty(unitid)) {
+            Log.d(TAG, "alx unitid is empty");
+            loadError(1, "alx unitid is empty.");
+            return;
+        }
+        if (TextUtils.isEmpty(sid)) {
+            Log.d(TAG, "alx sid is empty");
+            loadError(1, "alx sid is empty.");
+            return;
+        }
+        if (TextUtils.isEmpty(appid)) {
+            Log.d(TAG, "alx appid is empty");
+            loadError(1, "alx appid is empty.");
+            return;
+        }
+        if (TextUtils.isEmpty(token)) {
+            Log.d(TAG, "alx token is empty");
+            loadError(1, "alx token is empty");
+            return;
+        }
+
+        try {
+            Log.i(TAG, "alx token: " + token + " alx appid: " + appid + "alx sid: " + sid);
+            // init
+            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
+                @Override
+                public void onInit(boolean isOk, String msg) {
+                    preloadAd(context);
+                }
+            });
+//            // set GDPR
+//            AlxAdSDK.setSubjectToGDPR(true);
+//            // set GDPR Consent
+//            AlxAdSDK.setUserConsent("1");
+//            // set COPPA
+//            AlxAdSDK.setBelowConsentAge(true);
+//            // set CCPA
+//            AlxAdSDK.subjectToUSPrivacy("1YYY");
+            AlxAdSDK.setDebug(isdebug);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+            loadError(1, "alx sdk init error");
+        }
+    }
+
+    @Override
+    public void showAd(@NonNull Context context) {
+        Log.i(TAG, "alx showAd");
+        if (interstitialAd != null) {
+            if (context != null && context instanceof Activity) {
+                interstitialAd.show((Activity) context);
+            } else {
+                Log.i(TAG, "context is not an Activity");
+                interstitialAd.show(null);
+            }
+        }
+    }
+
+    private void loadError(int code, String message) {
+        if (mMediationLoadCallback != null) {
+            mMediationLoadCallback.onFailure(new AdError(code, message, AlxAdSDK.getNetWorkName()));
+        }
+    }
+
+    private void parseServer(String s) {
+        if (TextUtils.isEmpty(s)) {
+            Log.d(TAG, "serviceString  is empty ");
+            return;
+        }
+        Log.d(TAG, "serviceString   " + s);
+        try {
+            JSONObject json = new JSONObject(s);
+            appid = json.getString("appid");
+            sid = json.getString("sid");
+            token = json.getString("token");
+            unitid = json.getString("unitid");
+            String debug = json.optString("isdebug", "false");
+            if (TextUtils.equals(debug, "true")) {
+                isdebug = true;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() + "");
+        }
+        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(token)) {
+            try {
+                JSONObject json = new JSONObject(s);
+                appid = json.getString("appid");
+                sid = json.getString("appkey");
+                token = json.getString("license");
+                unitid = json.getString("unitid");
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage() + "");
+            }
+        }
+    }
+
+    private void preloadAd(final Context context) {
+        interstitialAd = new AlxInterstitialAD();
+        interstitialAd.load(context, unitid, new AlxInterstitialADListener() {
+
+            @Override
+            public void onInterstitialAdLoaded() {
+                if (mMediationLoadCallback != null) {
+                    mMediationEventCallback = mMediationLoadCallback.onSuccess(AlxInterstitialAdapter.this);
+                }
+            }
+
+            @Override
+            public void onInterstitialAdLoadFail(int errorCode, String errorMsg) {
+                loadError(errorCode, errorMsg);
+            }
+
+            @Override
+            public void onInterstitialAdClicked() {
+                if (mMediationEventCallback != null) {
+                    mMediationEventCallback.reportAdClicked();
+                }
+            }
+
+            @Override
+            public void onInterstitialAdShow() {
+                if (mMediationEventCallback != null) {
+                    mMediationEventCallback.reportAdImpression();
+                    mMediationEventCallback.onAdOpened();
+                }
+            }
+
+            @Override
+            public void onInterstitialAdClose() {
+                if (mMediationEventCallback != null) {
+                    mMediationEventCallback.onAdClosed();
+                }
+            }
+
+            @Override
+            public void onInterstitialAdVideoStart() {
+
+            }
+
+            @Override
+            public void onInterstitialAdVideoEnd() {
+
+            }
+
+            @Override
+            public void onInterstitialAdVideoError(int errorCode, String errorMsg) {
+            }
+        });
+    }
+
+
+    @Override
+    public VersionInfo getVersionInfo() {
+        String versionString = AlxAdSDK.getNetWorkVersion();
+        VersionInfo result = getAdapterVersionInfo(versionString);
+        if (result != null) {
+            return result;
+        }
+        return new VersionInfo(0, 0, 0);
+    }
+
+    @Override
+    public VersionInfo getSDKVersionInfo() {
+        String versionString = AlxAdSDK.getNetWorkVersion();
+        VersionInfo result = getAdapterVersionInfo(versionString);
+        if (result != null) {
+            return result;
+        }
+        return new VersionInfo(0, 0, 0);
+    }
+
+    private VersionInfo getAdapterVersionInfo(String version) {
+        if (TextUtils.isEmpty(version)) {
+            return null;
+        }
+        try {
+            String[] arr = version.split("\\.");
+            if (arr == null || arr.length < 3) {
+                return null;
+            }
+            int major = Integer.parseInt(arr[0]);
+            int minor = Integer.parseInt(arr[1]);
+            int micro = Integer.parseInt(arr[2]);
+            return new VersionInfo(major, minor, micro);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}

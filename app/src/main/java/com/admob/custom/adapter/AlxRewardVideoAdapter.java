@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.alxad.BuildConfig;
 import com.alxad.api.AlxAdSDK;
 import com.alxad.api.AlxRewardVideoAD;
 import com.alxad.api.AlxRewardVideoADListener;
@@ -20,7 +19,6 @@ import com.google.android.gms.ads.mediation.MediationRewardedAd;
 import com.google.android.gms.ads.mediation.MediationRewardedAdCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAdConfiguration;
 import com.google.android.gms.ads.mediation.VersionInfo;
-import com.google.android.gms.ads.reward.mediation.MediationRewardedVideoAdAdapter;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
 import org.json.JSONObject;
@@ -28,31 +26,33 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * Google Mobile ads 激励广告适配器
+ * Google Mobile ads AlgoriX Reward Video Adapter
  */
-public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedAd
-        , AlxRewardVideoADListener {
+public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedAd {
     private final String TAG = "AlxRewardVideoAdapter";
     public final String AD_NETWORK_NAME = "Algorix";
+    private static final String ALX_AD_UNIT_KEY = "parameter";
 
     private AlxRewardVideoAD alxRewardVideoAD;
-    private String mUnitid = "";
-    private String mAPPID = "";
-    private String mAppkey = "";
-    private String mLicense = "";
-    private Boolean hasDebug = false;
+    private String unitid = "";
+    private String appid = "";
+    private String sid = "";
+    private String token = "";
+    private Boolean isdebug = false;
     private Context mContext;
     private MediationAdLoadCallback<MediationRewardedAd, MediationRewardedAdCallback> mediationAdLoadCallBack;
     private MediationRewardedAdCallback mMediationRewardedAdCallback;
 
     @Override
-    public void initialize(Context context,InitializationCompleteCallback initializationCompleteCallback
+    public void initialize(Context context, InitializationCompleteCallback initializationCompleteCallback
             , List<MediationConfiguration> list) {
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
+        Log.e(TAG, "alx initialize...");
         for (MediationConfiguration configuration : list) {
             Bundle serverParameters = configuration.getServerParameters();
-            String serviceString = serverParameters.getString(MediationRewardedVideoAdAdapter.CUSTOM_EVENT_SERVER_PARAMETER_FIELD);
+            String serviceString = serverParameters.getString(ALX_AD_UNIT_KEY);
             if (!TextUtils.isEmpty(serviceString)) {
-                parseServiceString(serviceString);
+                parseServer(serviceString);
             }
         }
         if (initSDk(context)) {
@@ -64,7 +64,7 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
 
     @Override
     public VersionInfo getVersionInfo() {
-        String versionString = BuildConfig.VERSION_NAME;
+        String versionString = AlxAdSDK.getNetWorkVersion();
         String[] splits = versionString.split("\\.");
 
         if (splits.length >= 3) {
@@ -92,7 +92,9 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
 
     @Override
     public void showAd(Context context) {
+        Log.e(TAG, "alx showAd...");
         if (!(context instanceof Activity)) {
+            Log.e(TAG, "context is not Activity");
             mMediationRewardedAdCallback.onAdFailedToShow(new AdError(1,
                     "An activity context is required to show Sample rewarded ad."
                     , AD_NETWORK_NAME)
@@ -111,54 +113,142 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
     @Override
     public void loadRewardedAd(MediationRewardedAdConfiguration configuration
             , MediationAdLoadCallback<MediationRewardedAd, MediationRewardedAdCallback> mediationAdLoadCallback) {
-        Log.d(TAG, "loadRewardedAd: ");
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
+        Log.d(TAG, "alx loadRewardedAd");
         Context context = configuration.getContext();
         mediationAdLoadCallBack = mediationAdLoadCallback;
         Bundle serverParameters = configuration.getServerParameters();
-        String serviceString = serverParameters.getString(MediationRewardedVideoAdAdapter.CUSTOM_EVENT_SERVER_PARAMETER_FIELD);
+        String serviceString = serverParameters.getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(serviceString)) {
-            parseServiceString(serviceString);
+            parseServer(serviceString);
         }
         initSDk(context);
     }
 
     private boolean initSDk(final Context context) {
-        if (TextUtils.isEmpty(mUnitid)) {
+        if (TextUtils.isEmpty(unitid)) {
             Log.d(TAG, "alx unitid is empty");
             mediationAdLoadCallBack.onFailure(new AdError(1, "alx unitid is empty."
                     , AD_NETWORK_NAME));
             return false;
         }
-        if (TextUtils.isEmpty(mAPPID)) {
+        if (TextUtils.isEmpty(sid)) {
+            Log.d(TAG, "alx sid is empty");
+            mediationAdLoadCallBack.onFailure(new AdError(1, "alx sid is empty."
+                    , AD_NETWORK_NAME));
+            return false;
+        }
+        if (TextUtils.isEmpty(appid)) {
             Log.d(TAG, "alx appid is empty");
             mediationAdLoadCallBack.onFailure(new AdError(1, "alx appid is empty."
                     , AD_NETWORK_NAME));
             return false;
         }
-        if (TextUtils.isEmpty(mAppkey)) {
-            Log.d(TAG, "alx appkey is empty");
-            mediationAdLoadCallBack.onFailure(new AdError(1, "alx appkey is empty."
-                    , AD_NETWORK_NAME));
-            return false;
-        }
-        if (TextUtils.isEmpty(mLicense)) {
-            Log.d(TAG, "alx license is empty");
-            mediationAdLoadCallBack.onFailure(new AdError(1, "alx license is empty"
+        if (TextUtils.isEmpty(token)) {
+            Log.d(TAG, "alx token is empty");
+            mediationAdLoadCallBack.onFailure(new AdError(1, "alx token is empty"
                     , AD_NETWORK_NAME));
             return false;
         }
         try {
-            Log.d(TAG, "alx license: " + mLicense + " alx appkey: " + mAppkey + "alx appid: " + mAPPID);
-            AlxAdSDK.init(context, mLicense, mAppkey, mAPPID, new AlxSdkInitCallback() {
+            Log.d(TAG, "alx token: " + token + " alx appid: " + appid + "alx sid: " + sid);
+            // init
+            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override
                 public void onInit(boolean isOk, String msg) {
-                    //sdk初始化成功 加载广告
+                    //sdk init success, begin load ad
                     alxRewardVideoAD = new AlxRewardVideoAD();
-//                    alxRewardVideoAD.setTimeout(5,5);
-                    alxRewardVideoAD.load(context, mUnitid, AlxRewardVideoAdapter.this);
+                    alxRewardVideoAD.load(context, unitid, new AlxRewardVideoADListener() {
+                        @Override
+                        public void onRewardedVideoAdLoaded(AlxRewardVideoAD var1) {
+                            Log.d(TAG, "onRewardedVideoAdLoaded");
+                            if (mediationAdLoadCallBack != null)
+                                mMediationRewardedAdCallback = (MediationRewardedAdCallback) mediationAdLoadCallBack
+                                        .onSuccess(AlxRewardVideoAdapter.this);
+                        }
+
+
+                        @Override
+                        public void onRewardedVideoAdFailed(AlxRewardVideoAD var1, int errCode, String errMsg) {
+                            Log.d(TAG, "onRewardedVideoAdFailed: " + errMsg);
+                            if (mediationAdLoadCallBack != null) mediationAdLoadCallBack
+                                    .onFailure(new AdError(errCode, errMsg, AD_NETWORK_NAME));
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdPlayStart(AlxRewardVideoAD var1) {
+                            if (mMediationRewardedAdCallback != null && mContext instanceof Activity) {
+                                ((Activity) mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // runOnUiThread
+                                        mMediationRewardedAdCallback.reportAdImpression();
+                                        mMediationRewardedAdCallback.onAdOpened();
+                                        mMediationRewardedAdCallback.onVideoStart();
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdPlayEnd(AlxRewardVideoAD var1) {
+                            Log.d(TAG, "onRewardedVideoAdPlayEnd: ");
+                            if (mMediationRewardedAdCallback != null)
+                                mMediationRewardedAdCallback.onVideoComplete();
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdPlayFailed(AlxRewardVideoAD var2, int errCode, String errMsg) {
+                            Log.d(TAG, "onShowFail: " + errMsg);
+                            if (mMediationRewardedAdCallback != null)
+                                mMediationRewardedAdCallback.onAdFailedToShow(
+                                        new AdError(errCode, errMsg, AD_NETWORK_NAME));
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdClosed(AlxRewardVideoAD var1) {
+                            Log.d(TAG, "onRewardedVideoAdClosed: ");
+                            if (mMediationRewardedAdCallback != null) {
+                                mMediationRewardedAdCallback.onAdClosed();
+                            }
+                        }
+
+                        @Override
+                        public void onRewardedVideoAdPlayClicked(AlxRewardVideoAD var1) {
+                            Log.d(TAG, "onRewardedVideoAdPlayClicked: ");
+                            if (mMediationRewardedAdCallback != null)
+                                mMediationRewardedAdCallback.reportAdClicked();
+                        }
+
+                        @Override
+                        public void onReward(AlxRewardVideoAD var1) {
+                            Log.d(TAG, "onReward: ");
+                            if (mMediationRewardedAdCallback != null) {
+                                mMediationRewardedAdCallback.onUserEarnedReward(new RewardItem() {
+                                    @Override
+                                    public String getType() {
+                                        return "";
+                                    }
+
+                                    @Override
+                                    public int getAmount() {
+                                        return 1;
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             });
-            AlxAdSDK.setDebug(hasDebug);
+//            // set GDPR
+//            AlxAdSDK.setSubjectToGDPR(true);
+//            // set GDPR Consent
+//            AlxAdSDK.setUserConsent("1");
+//            // set COPPA
+//            AlxAdSDK.setBelowConsentAge(true);
+//            // set CCPA
+//            AlxAdSDK.subjectToUSPrivacy("1YYY");
+            AlxAdSDK.setDebug(isdebug);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -166,96 +256,37 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
     }
 
 
-    private void parseServiceString(String serviceString) {
-        if (TextUtils.isEmpty(serviceString)) {
+    private void parseServer(String s) {
+        if (TextUtils.isEmpty(s)) {
             Log.d(TAG, "serviceString  is empty ");
             return;
         }
-        Log.d(TAG, "serviceString   " + serviceString);
+        Log.d(TAG, "serviceString   " + s);
         try {
-            JSONObject jsonObject = new JSONObject(serviceString);
-            mUnitid = jsonObject.optString("unitid");
-            mAPPID = jsonObject.optString("appid");
-            mAppkey = jsonObject.optString("appkey");
-            mLicense = jsonObject.optString("license");
-            hasDebug = jsonObject.optBoolean("isdebug");
+            JSONObject json = new JSONObject(s);
+            appid = json.getString("appid");
+            sid = json.getString("sid");
+            token = json.getString("token");
+            unitid = json.getString("unitid");
+            String debug = json.optString("isdebug","false");
+            if (TextUtils.equals(debug, "true")) {
+                isdebug = true;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage() + "");
+        }
+        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(token)) {
+            try {
+                JSONObject json = new JSONObject(s);
+                appid = json.getString("appid");
+                sid = json.getString("appkey");
+                token = json.getString("license");
+                unitid = json.getString("unitid");
+                isdebug = json.optBoolean("isdebug");
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage() + "");
+            }
         }
     }
 
-
-    @Override
-    public void onRewardedVideoAdLoaded(AlxRewardVideoAD var1) {
-        if (mediationAdLoadCallBack != null)
-            mMediationRewardedAdCallback = (MediationRewardedAdCallback) mediationAdLoadCallBack
-                    .onSuccess(this);
-
-    }
-
-    @Override
-    public void onRewardedVideoAdFailed(AlxRewardVideoAD var1, int errCode, String errMsg) {
-        Log.d(TAG, "onVideoLoadFail: " + errMsg);
-        if (mediationAdLoadCallBack != null) mediationAdLoadCallBack
-                .onFailure(new AdError(errCode, errMsg, AD_NETWORK_NAME));
-    }
-
-    @Override
-    public void onRewardedVideoAdPlayStart(AlxRewardVideoAD var1) {
-        if (mMediationRewardedAdCallback != null && mContext instanceof Activity) {
-            ((Activity) mContext).runOnUiThread(() -> {
-                //必须在主线程中回调下面三个方法
-                mMediationRewardedAdCallback.reportAdImpression();
-                mMediationRewardedAdCallback.onAdOpened();
-                mMediationRewardedAdCallback.onVideoStart();
-            });
-        }
-    }
-
-    @Override
-    public void onRewardedVideoAdPlayEnd(AlxRewardVideoAD var1) {
-        Log.d(TAG, "onRewardedVideoAdPlayEnd: ");
-        if (mMediationRewardedAdCallback != null) mMediationRewardedAdCallback.onVideoComplete();
-    }
-
-    @Override
-    public void onRewardedVideoAdPlayFailed(AlxRewardVideoAD var2, int errCode, String errMsg) {
-        Log.d(TAG, "onShowFail: " + errMsg);
-        if (mMediationRewardedAdCallback != null) mMediationRewardedAdCallback.onAdFailedToShow(
-                new AdError(errCode, errMsg, AD_NETWORK_NAME));
-    }
-
-    @Override
-    public void onRewardedVideoAdClosed(AlxRewardVideoAD var1) {
-        Log.d(TAG, "onRewardedVideoAdClosed: ");
-        if (mMediationRewardedAdCallback != null) {
-            mMediationRewardedAdCallback.onAdClosed();
-        }
-    }
-
-    @Override
-    public void onRewardedVideoAdPlayClicked(AlxRewardVideoAD var1) {
-        Log.d(TAG, "onRewardedVideoAdPlayClicked: ");
-        if (mMediationRewardedAdCallback != null) mMediationRewardedAdCallback.reportAdClicked();
-    }
-
-    @Override
-    public void onReward(AlxRewardVideoAD var1) {
-        Log.d(TAG, "onReward: ");
-        if (mMediationRewardedAdCallback != null) {
-            mMediationRewardedAdCallback.onUserEarnedReward(new RewardItem() {
-                @Override
-                public String getType() {
-                    // mintegral SDK does not provide a reward type.
-                    return "";
-                }
-
-                @Override
-                public int getAmount() {
-                    // mintegral SDK does not provide reward amount, default to 1.
-                    return 1;
-                }
-            });
-        }
-    }
 }

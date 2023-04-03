@@ -2,6 +2,7 @@ package com.anythink.custom.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.alxad.api.AlxAdSDK;
@@ -21,72 +22,75 @@ public class AlxRewardVideoAdapter extends CustomRewardVideoAdapter {
     private AlxRewardVideoAD alxRewardVideoAD;
     private String unitid = "";
     private String appid = "";
-    private String appkey = "";
-    private String license = "";
-    private Boolean isdebug = false;
+    private String sid = "";
+    private String token = "";
+    private Boolean isdebug = true;
 
     @Override
     public void loadCustomNetworkAd(Context context, Map<String, Object> serverExtras, Map<String, Object> map1) {
+        Log.d(TAG, "alx-topon-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
         Log.i(TAG, "loadCustomNetworkAd");
-        if (serverExtras.containsKey("unitid")) {
-            unitid = (String) serverExtras.get("unitid");
-
-        } else {
-            if (mLoadListener != null) {
-                Log.i(TAG, "alx unitid is empty");
-                mLoadListener.onAdLoadError("", "alx unitid is empty.");
-            }
-            return;
+        if (parseServer(serverExtras)) {
+            initSdk(context);
         }
-        if (serverExtras.containsKey("appid")) {
-            appid = (String) serverExtras.get("appid");
+    }
 
-        } else {
-            if (mLoadListener != null) {
-                Log.i(TAG, "alx appid is empty");
-                mLoadListener.onAdLoadError("", "alx appid is empty.");
+    private boolean parseServer(Map<String, Object> serverExtras) {
+        try {
+            if (serverExtras.containsKey("unitid")) {
+                unitid = (String) serverExtras.get("unitid");
             }
-            return;
-        }
-        if (serverExtras.containsKey("appkey")) {
-            appkey = (String) serverExtras.get("appkey");
+            if (serverExtras.containsKey("appid")) {
+                appid = (String) serverExtras.get("appid");
 
-        } else {
-            if (mLoadListener != null) {
-                Log.i(TAG, "alx unitid is empty");
-                mLoadListener.onAdLoadError("", "alx unitid is empty.");
+            } else if (serverExtras.containsKey("appkey")) {
+                appid = (String) serverExtras.get("appkey");
             }
-            return;
-        }
-        if (serverExtras.containsKey("license")) {
-            license = (String) serverExtras.get("license");
+            if (serverExtras.containsKey("appkey")) {
+                sid = (String) serverExtras.get("appkey");
+            } else if (serverExtras.containsKey("sid")) {
+                sid = (String) serverExtras.get("sid");
+            }
+            if (serverExtras.containsKey("license")) {
+                token = (String) serverExtras.get("license");
+            } else if (serverExtras.containsKey("token")) {
+                token = (String) serverExtras.get("token");
+            }
 
-        } else {
-            if (mLoadListener != null) {
-                Log.i(TAG, "alx license is empty");
-                mLoadListener.onAdLoadError("", "alx license is empty.");
-            }
-            return;
-        }
-        if (serverExtras.containsKey("isdebug")) {
-            String test = serverExtras.get("isdebug").toString();
-            if (test.equals("true")) {
-                isdebug = true;
+            if (serverExtras.containsKey("isdebug")) {
+                String test = serverExtras.get("isdebug").toString();
+                Log.e(TAG, "alx debug mode:" + test);
+                if (test.equals("true")) {
+                    isdebug = true;
+                } else {
+                    isdebug = false;
+                }
             } else {
-                isdebug = false;
+                Log.e(TAG, "alx debug mode: false");
             }
-
+            if (serverExtras.containsKey("tag")) {
+                String tag = serverExtras.get("tag").toString();
+                Log.e(TAG, "alx json tag:" + tag);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        initSdk(context);
-
+        if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
+            Log.i(TAG, "alx unitid | token | sid | appid is empty");
+            if (mLoadListener != null) {
+                mLoadListener.onAdLoadError("", "alx unitid | token | sid | appid is empty.");
+            }
+            return false;
+        }
+        return true;
     }
 
     private void initSdk(final Context context) {
         try {
-            Log.i(TAG, "alx license: " + license + " alx appkey: " + appkey + " alx appid: " + appid);
+            Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
             AlxAdSDK.setDebug(isdebug);
-            AlxAdSDK.init(context, license, appkey, appid, new AlxSdkInitCallback() {
+            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override
                 public void onInit(boolean isOk, String msg) {
                     //if (isOk){
@@ -159,6 +163,7 @@ public class AlxRewardVideoAdapter extends CustomRewardVideoAdapter {
                     mImpressionListener.onReward();
                 }
             }
+
         });
     }
 

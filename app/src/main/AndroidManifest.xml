@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.test.alxad.demo">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.alxad.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -8,54 +9,178 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:debuggable="true"
+        tools:ignore="HardcodedDebugMode">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".alx.SplashActivity"
+            android:theme="@style/splash_theme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".alxad.AlxAdDemoListActivity" />
-        <activity android:name=".alxad.AlxBannerDemoActivity" />
-        <activity android:name=".alxad.AlxRewardVideoDemoActivity"/>
-        <activity android:name=".toponad.TopOnAdDemoListActivity"/>
-        <activity android:name=".toponad.TopOnBannerDemoActivity" />
-        <activity android:name=".toponad.TopOnVideoDemoActivity" />
-        <!-- android:name="ALX_LICENSE" -->
-        <!-- android:value="10f0e186e95b3ee597804f65831e5359" /> -->
-        <!-- <meta-data -->
-        <!-- android:name="ALX_KEY" -->
-        <!-- android:value="30012" /> -->
-        <!-- <meta-data -->
-        <!-- android:name="ALX_APP_ID" -->
-        <!-- android:value="2a4a1e38839977ecd152f89c01f66683" /> -->
+        <activity android:name=".MainActivity"></activity>
+
+
+        <!-- Alx demo案例-->
+        <activity android:name=".alx.AdListActivity" />
+        <activity android:name=".alx.BannerActivity"
+            android:label="Alx Ad: banner"/>
+        <activity
+            android:name=".alx.BannerListViewActivity"
+            android:label="Alx Ad: ListView banner show" />
+        <activity
+            android:name=".alx.BannerRecyclerViewActivity"
+            android:label="Alx Ad: RecyclerView banner show" />
+        <activity android:name=".alx.RewardVideoActivity"
+            android:label="Alx Ad: reward video"/>
+        <activity android:name=".alx.InterstitialActivity"
+            android:label="Alx Ad: interstitial"/>
+
+        <activity android:name=".alx.NativeListActivity"
+            android:label="Alx Ad: native"/>
+        <activity
+            android:name=".alx.NativeListViewActivity"
+            android:label="Alx Ad: ListView native show" />
+        <activity
+            android:name=".alx.NativeRecyclerViewActivity"
+            android:label="Alx Ad: RecyclerView native show" />
+        <activity
+            android:name=".alx.NativeNormalActivity"
+            android:label="Alx Ad: Normal native show" />
+
+        <!-- TopOn平台 demo案例 -->
+        <activity
+            android:name=".topon.TopOnAdDemoListActivity"
+            android:label="TopOn Ad" />
+        <activity android:name=".topon.TopOnBannerActivity"
+            android:label="TopOn Ad: banner"/>
+        <activity android:name=".topon.TopOnNativeActivity"
+            android:label="TopOn Ad: native"/>
+        <activity android:name=".topon.TopOnRewardVideoActivity"
+            android:label="TopOn Ad: reward video"/>
+        <activity android:name=".topon.TopOnInterstitialActivity"
+            android:label="TopOn Ad: interstitial"/>
+        <activity android:name=".topon.TopOnSplashActivity"
+            android:label="TopOn Ad: splash"/>
+
+
+        <!-- Admob平台 demo案例 -->
+        <activity
+            android:name=".admob.AdmobDemoListActivity"
+            android:label="Admob Ad" />
+        <activity android:name=".admob.AdmobBannerActivity"
+            android:label="Admob Ad: banner"/>
+        <activity android:name=".admob.AdmobRewardVideoActivity"
+            android:label="Admob Ad: reward video"/>
+        <activity android:name=".admob.AdmobInterstitialActivity"
+            android:label="Admob Ad: interstitial"/>
+        <activity android:name=".admob.AdmobNativeActivity"
+            android:label="Admob Ad: native"/>
+
+
+
+        <!-- TradPlus平台 demo案例 -->
+        <activity
+            android:name=".tradplus.TradPlusDemoListActivity"
+            android:label="TradPlus Ad" />
+        <activity android:name=".tradplus.TradPlusSplashActivity"
+            android:label="TradPlus Ad: splash"/>
+        <activity android:name=".tradplus.TradPlusBannerActivity"
+            android:label="TradPlus Ad: banner"/>
+        <activity android:name=".tradplus.TradPlusRewardVideoActivity"
+            android:label="TradPlus Ad: reward video"/>
+        <activity android:name=".tradplus.TradPlusInterstitialActivity"
+            android:label="TradPlus Ad: interstitial"/>
+        <activity android:name=".tradplus.TradPlusNativeActivity"
+            android:label="TradPlus Ad: native"/>
+
+
+        <!-- IronSource平台 demo案例 -->
+        <activity
+            android:name=".ironsource.IronSourceDemoListActivity"
+            android:label="Ironsource Ad"></activity>
+        <activity android:name=".ironsource.IronSourceInterstitialActivity"
+            android:label="Ironsource Ad: interstitial"/>
+        <activity android:name=".ironsource.IronSourceRewardedVideoActivity"
+            android:label="Ironsource Ad: reward video"/>
+        <activity android:name=".ironsource.IronSourceBannerActivity"
+            android:label="Ironsource Ad: banner"/>
+
+        <!-- max平台 demo案例 -->
+        <activity
+            android:name=".max.MaxDemoListActivity"
+            android:label="max Ad" />
+        <activity
+            android:name=".max.MaxBannerActivity"
+            android:label="max Ad:banner" />
+        <activity
+            android:name=".max.MaxInterstitialActivity"
+            android:label="max Ad:interstitial" />
+        <activity
+            android:name=".max.MaxRewardVideoActivity"
+            android:label="max Ad:reward video" />
+        <activity
+            android:name=".max.MaxNativeActivity"
+            android:label="max Ad:native" />
+
+
+
+        <!-- 下面是配置信息 -->
+        <!--TopOn平台//////start     -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
+        <!--google-->
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
-        <meta-data
-            android:name="ALX_LICENSE"
-            android:value="7b9f41d06393fcdae195e0fbaee34923Y5" />
-        <meta-data
-            android:name="ALX_KEY"
-            android:value="60023" />
-        <meta-data
-            android:name="ALX_APP_ID"
-            android:value="246a96361196f62202e6033f2e44720eY4" />
+        <!--TopOn平台//////end  -->
+
+
+        <!--ironsource平台//////start     -->
+        <activity
+            android:name="com.ironsource.sdk.controller.ControllerActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name="com.ironsource.sdk.controller.InterstitialActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.ironsource.sdk.controller.OpenUrlActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent" />
+
+        <provider
+            android:name="com.ironsource.lifecycle.IronsourceLifecycleProvider"
+            android:authorities="${applicationId}.IronsourceLifecycleProvider" />
+        <!--ironsource平台//////end     -->
+
+        <!--max平台//////start     -->
+        <meta-data android:name="applovin.sdk.key"
+            android:value="95-ffs7CG-uU8Z3exG1oky-tAdQGD1z1kHK365gIQdSIH90WNUv2fTCPFMBhVmH9Fx0o1GhhAX7DQDrnACsVIv"/>
+
+        <!--max平台//////start     -->
+
     </application>
 
 </manifest>
