@@ -57,7 +57,7 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
     @Override
     public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
         Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
-        Log.d(TAG, "alx-admob-adapter: loadInterstitialAd " + Thread.currentThread().getName());
+        Log.d(TAG, "alx-admob-adapter: loadInterstitialAd");
         mMediationLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString("parameter");
         if (!TextUtils.isEmpty(parameter)) {
@@ -117,6 +117,13 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
     public void showAd(@NonNull Context context) {
         Log.i(TAG, "alx showAd");
         if (interstitialAd != null) {
+            if (!interstitialAd.isReady()) {
+                if (mMediationEventCallback != null) {
+                    mMediationEventCallback.onAdFailedToShow(new AdError(1, "isReady: Ad not loaded or Ad load failed"
+                            , AlxAdSDK.getNetWorkName()));
+                }
+                return;
+            }
             if (context != null && context instanceof Activity) {
                 interstitialAd.show((Activity) context);
             } else {
@@ -150,17 +157,6 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");
-        }
-        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(token)) {
-            try {
-                JSONObject json = new JSONObject(s);
-                appid = json.getString("appid");
-                sid = json.getString("appkey");
-                token = json.getString("license");
-                unitid = json.getString("unitid");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage() + "");
-            }
         }
     }
 

@@ -56,7 +56,7 @@ public class AlxBannerAdapter extends Adapter implements MediationBannerAd {
     @Override
     public void loadBannerAd(@NonNull MediationBannerAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
         Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
-        Log.d(TAG, "alx-admob-adapter: loadBannerAd " + Thread.currentThread().getName());
+        Log.d(TAG, "alx-admob-adapter: loadBannerAd");
         mMediationLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString("parameter");
         if (!TextUtils.isEmpty(parameter)) {
@@ -126,9 +126,9 @@ public class AlxBannerAdapter extends Adapter implements MediationBannerAd {
         Log.d(TAG, "serviceString   " + s);
         try {
             JSONObject json = new JSONObject(s);
-            token = json.getString("token");
-            sid = json.getString("sid");
             appid = json.getString("appid");
+            sid = json.getString("sid");
+            token = json.getString("token");
             unitid = json.getString("unitid");
             String debug = json.optString("isdebug", "false");
             if (TextUtils.equals(debug, "true")) {
@@ -136,17 +136,6 @@ public class AlxBannerAdapter extends Adapter implements MediationBannerAd {
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");
-        }
-        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(token)) {
-            try {
-                JSONObject json = new JSONObject(s);
-                token = json.getString("license");
-                sid = json.getString("appkey");
-                appid = json.getString("appid");
-                unitid = json.getString("unitid");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage() + "");
-            }
         }
     }
 

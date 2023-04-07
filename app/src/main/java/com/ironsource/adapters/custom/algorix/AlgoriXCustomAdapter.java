@@ -22,7 +22,7 @@ public class AlgoriXCustomAdapter extends BaseAdapter {
     private String sid = "";
     private String token = "";
     private Boolean isdebug = true;
-    private Map<String, Object>  serverExtras;
+    private Map<String, Object> serverExtras;
     private NetworkInitializationListener mNetworkInitializationListener;
 
     @Override
@@ -32,16 +32,16 @@ public class AlgoriXCustomAdapter extends BaseAdapter {
 
         try {
             mNetworkInitializationListener = networkInitializationListener;
-            if(parseServer(adData)){
+            if (parseServer(adData)) {
                 Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
                 AlxAdSDK.setDebug(isdebug);
                 AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                     @Override
                     public void onInit(boolean isOk, String msg) {
-                        if (isOk){
+                        if (isOk) {
                             mNetworkInitializationListener.onInitSuccess();
-                        }else {
+                        } else {
                             mNetworkInitializationListener.onInitFailed(AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS, "AlxSdk Init Failed");
                         }
                     }
@@ -56,31 +56,24 @@ public class AlgoriXCustomAdapter extends BaseAdapter {
 
     private boolean parseServer(AdData adData) {
         try {
-                serverExtras = adData.getConfiguration();
+            serverExtras = adData.getConfiguration();
+            if (serverExtras.containsKey("appid")) {
+                appid = (String) serverExtras.get("appid");
+            }
+            if (serverExtras.containsKey("sid")) {
+                sid = (String) serverExtras.get("sid");
+            }
+            if (serverExtras.containsKey("token")) {
+                token = (String) serverExtras.get("token");
+            }
             if (serverExtras.containsKey("unitid")) {
                 unitid = (String) serverExtras.get("unitid");
             }
-            if (serverExtras.containsKey("appid")) {
-                appid = (String) serverExtras.get("appid");
-
-            } else if (serverExtras.containsKey("appkey")) {
-                appid = (String) serverExtras.get("appkey");
-            }
-            if (serverExtras.containsKey("appkey")) {
-                sid = (String) serverExtras.get("appkey");
-            } else if (serverExtras.containsKey("sid")) {
-                sid = (String) serverExtras.get("sid");
-            }
-            if (serverExtras.containsKey("license")) {
-                token = (String) serverExtras.get("license");
-            } else if (serverExtras.containsKey("token")) {
-                token = (String) serverExtras.get("token");
-            }
 
             if (serverExtras.containsKey("isdebug")) {
-                String test = serverExtras.get("isdebug").toString();
-                Log.e(TAG, "alx debug mode:" + test);
-                if (test.equals("true")) {
+                String debug = serverExtras.get("isdebug").toString();
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (TextUtils.equals(debug,"true")) {
                     isdebug = true;
                 } else {
                     isdebug = false;
@@ -88,17 +81,13 @@ public class AlgoriXCustomAdapter extends BaseAdapter {
             } else {
                 Log.e(TAG, "alx debug mode: false");
             }
-            if (serverExtras.containsKey("tag")) {
-                String tag = serverExtras.get("tag").toString();
-                Log.e(TAG, "alx json tag:" + tag);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
             Log.i(TAG, "alx unitid | token | sid | appid is empty");
             if (mNetworkInitializationListener != null) {
-                mNetworkInitializationListener.onInitFailed(AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS,"\"alx unitid | token | sid | appid is empty\"");
+                mNetworkInitializationListener.onInitFailed(AdapterErrors.ADAPTER_ERROR_MISSING_PARAMS, "alx unitid | token | sid | appid is empty");
             }
             return false;
         }
@@ -107,7 +96,7 @@ public class AlgoriXCustomAdapter extends BaseAdapter {
 
     @Override
     public String getNetworkSDKVersion() {
-        return  AlxAdSDK.getNetWorkVersion();
+        return AlxAdSDK.getNetWorkVersion();
     }
 
     @Override

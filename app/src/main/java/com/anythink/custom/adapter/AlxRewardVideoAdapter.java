@@ -37,40 +37,29 @@ public class AlxRewardVideoAdapter extends CustomRewardVideoAdapter {
 
     private boolean parseServer(Map<String, Object> serverExtras) {
         try {
+            if (serverExtras.containsKey("appid")) {
+                appid = (String) serverExtras.get("appid");
+            }
+            if (serverExtras.containsKey("sid")) {
+                sid = (String) serverExtras.get("sid");
+            }
+            if (serverExtras.containsKey("token")) {
+                token = (String) serverExtras.get("token");
+            }
             if (serverExtras.containsKey("unitid")) {
                 unitid = (String) serverExtras.get("unitid");
             }
-            if (serverExtras.containsKey("appid")) {
-                appid = (String) serverExtras.get("appid");
-
-            } else if (serverExtras.containsKey("appkey")) {
-                appid = (String) serverExtras.get("appkey");
-            }
-            if (serverExtras.containsKey("appkey")) {
-                sid = (String) serverExtras.get("appkey");
-            } else if (serverExtras.containsKey("sid")) {
-                sid = (String) serverExtras.get("sid");
-            }
-            if (serverExtras.containsKey("license")) {
-                token = (String) serverExtras.get("license");
-            } else if (serverExtras.containsKey("token")) {
-                token = (String) serverExtras.get("token");
-            }
 
             if (serverExtras.containsKey("isdebug")) {
-                String test = serverExtras.get("isdebug").toString();
-                Log.e(TAG, "alx debug mode:" + test);
-                if (test.equals("true")) {
+                String debug = serverExtras.get("isdebug").toString();
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (TextUtils.equals(debug,"true")) {
                     isdebug = true;
                 } else {
                     isdebug = false;
                 }
             } else {
                 Log.e(TAG, "alx debug mode: false");
-            }
-            if (serverExtras.containsKey("tag")) {
-                String tag = serverExtras.get("tag").toString();
-                Log.e(TAG, "alx json tag:" + tag);
             }
         } catch (Exception e) {
             e.printStackTrace();

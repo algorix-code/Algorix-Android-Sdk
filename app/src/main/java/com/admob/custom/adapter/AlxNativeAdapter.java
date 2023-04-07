@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.alxad.api.AlxAdParam;
 import com.alxad.api.AlxAdSDK;
 import com.alxad.api.AlxImage;
-import com.alxad.api.AlxAdParam;
 import com.alxad.api.AlxSdkInitCallback;
 import com.alxad.api.nativead.AlxMediaView;
 import com.alxad.api.nativead.AlxNativeAd;
@@ -171,9 +171,9 @@ public class AlxNativeAdapter extends Adapter {
         Log.d(TAG, "serviceString   " + s);
         try {
             JSONObject json = new JSONObject(s);
-            token = json.getString("token");
-            sid = json.getString("sid");
             appid = json.getString("appid");
+            sid = json.getString("sid");
+            token = json.getString("token");
             unitid = json.getString("unitid");
             String debug = json.optString("isdebug", "false");
             if (TextUtils.equals(debug, "true")) {

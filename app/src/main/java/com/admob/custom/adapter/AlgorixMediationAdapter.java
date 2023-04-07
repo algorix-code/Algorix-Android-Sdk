@@ -106,7 +106,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     @Override
     public void loadBannerAd(@NonNull MediationBannerAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
         Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
-        Log.d(TAG, "alx-admob-adapter: loadBannerAd " + Thread.currentThread().getName());
+        Log.d(TAG, "alx-admob-adapter: loadBannerAd");
         mBannerLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
@@ -125,7 +125,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     @Override
     public void loadNativeAd(@NonNull MediationNativeAdConfiguration configuration, @NonNull MediationAdLoadCallback<UnifiedNativeAdMapper, MediationNativeAdCallback> callback) {
         Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
-        Log.d(TAG, "alx-admob-adapter: loadNativeAd " + Thread.currentThread().getName());
+        Log.d(TAG, "alx-admob-adapter: loadNativeAd");
         mNativeLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
@@ -137,7 +137,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     @Override
     public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
         Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
-        Log.d(TAG, "alx-admob-adapter: loadInterstitialAd " + Thread.currentThread().getName());
+        Log.d(TAG, "alx-admob-adapter: loadInterstitialAd");
         mInterstitialLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
@@ -149,7 +149,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     @Override
     public void loadRewardedAd(@NonNull MediationRewardedAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationRewardedAd, MediationRewardedAdCallback> callback) {
         Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
-        Log.d(TAG, "alx-admob-adapter: loadInterstitialAd " + Thread.currentThread().getName());
+        Log.d(TAG, "alx-admob-adapter: loadRewardedAd");
         mRewardLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
@@ -162,6 +162,13 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     @Override
     public void showAd(@NonNull Context context) {
         if (interstitialAd != null) {
+            if (!interstitialAd.isReady()) {
+                if (mInterstitialEventCallback != null) {
+                    mInterstitialEventCallback.onAdFailedToShow(new AdError(1, "isReady: Ad not loaded or Ad load failed"
+                            , AlxAdSDK.getNetWorkName()));
+                }
+                return;
+            }
             if (context != null && context instanceof Activity) {
                 interstitialAd.show((Activity) context);
             } else {
@@ -169,6 +176,13 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
                 interstitialAd.show(null);
             }
         } else if (rewardVideoAd != null) {
+            if (!rewardVideoAd.isReady()) {
+                if (mRewardEventCallback != null) {
+                    mRewardEventCallback.onAdFailedToShow(new AdError(1, "isReady: Ad not loaded or Ad load failed"
+                            , AlxAdSDK.getNetWorkName()));
+                }
+                return;
+            }
             if (context != null && context instanceof Activity) {
                 rewardVideoAd.showVideo((Activity) context);
             } else {
@@ -461,9 +475,9 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
         Log.d(TAG, "serviceString   " + s);
         try {
             JSONObject json = new JSONObject(s);
-            token = json.getString("token");
-            sid = json.getString("sid");
             appid = json.getString("appid");
+            sid = json.getString("sid");
+            token = json.getString("token");
             unitid = json.getString("unitid");
             String debug = json.optString("isdebug", "false");
             if (TextUtils.equals(debug, "true")) {
@@ -471,17 +485,6 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");
-        }
-        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(token)) {
-            try {
-                JSONObject json = new JSONObject(s);
-                token = json.getString("license");
-                sid = json.getString("appkey");
-                appid = json.getString("appid");
-                unitid = json.getString("unitid");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage() + "");
-            }
         }
     }
 

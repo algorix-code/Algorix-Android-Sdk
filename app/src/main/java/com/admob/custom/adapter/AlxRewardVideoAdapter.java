@@ -30,7 +30,6 @@ import java.util.List;
  */
 public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedAd {
     private final String TAG = "AlxRewardVideoAdapter";
-    public final String AD_NETWORK_NAME = "Algorix";
     private static final String ALX_AD_UNIT_KEY = "parameter";
 
     private AlxRewardVideoAD alxRewardVideoAD;
@@ -97,14 +96,14 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
             Log.e(TAG, "context is not Activity");
             mMediationRewardedAdCallback.onAdFailedToShow(new AdError(1,
                     "An activity context is required to show Sample rewarded ad."
-                    , AD_NETWORK_NAME)
+                    , AlxAdSDK.getNetWorkName())
             );
             return;
         }
         mContext = context;
         if (!alxRewardVideoAD.isReady()) {
             mMediationRewardedAdCallback.onAdFailedToShow(new AdError(1, "No ads to show."
-                    , AD_NETWORK_NAME));
+                    , AlxAdSDK.getNetWorkName()));
             return;
         }
         alxRewardVideoAD.showVideo((Activity) context);
@@ -129,25 +128,25 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
         if (TextUtils.isEmpty(unitid)) {
             Log.d(TAG, "alx unitid is empty");
             mediationAdLoadCallBack.onFailure(new AdError(1, "alx unitid is empty."
-                    , AD_NETWORK_NAME));
+                    , AlxAdSDK.getNetWorkName()));
             return false;
         }
         if (TextUtils.isEmpty(sid)) {
             Log.d(TAG, "alx sid is empty");
             mediationAdLoadCallBack.onFailure(new AdError(1, "alx sid is empty."
-                    , AD_NETWORK_NAME));
+                    , AlxAdSDK.getNetWorkName()));
             return false;
         }
         if (TextUtils.isEmpty(appid)) {
             Log.d(TAG, "alx appid is empty");
             mediationAdLoadCallBack.onFailure(new AdError(1, "alx appid is empty."
-                    , AD_NETWORK_NAME));
+                    , AlxAdSDK.getNetWorkName()));
             return false;
         }
         if (TextUtils.isEmpty(token)) {
             Log.d(TAG, "alx token is empty");
             mediationAdLoadCallBack.onFailure(new AdError(1, "alx token is empty"
-                    , AD_NETWORK_NAME));
+                    , AlxAdSDK.getNetWorkName()));
             return false;
         }
         try {
@@ -172,7 +171,7 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
                         public void onRewardedVideoAdFailed(AlxRewardVideoAD var1, int errCode, String errMsg) {
                             Log.d(TAG, "onRewardedVideoAdFailed: " + errMsg);
                             if (mediationAdLoadCallBack != null) mediationAdLoadCallBack
-                                    .onFailure(new AdError(errCode, errMsg, AD_NETWORK_NAME));
+                                    .onFailure(new AdError(errCode, errMsg, AlxAdSDK.getNetWorkName()));
                         }
 
                         @Override
@@ -202,7 +201,7 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
                             Log.d(TAG, "onShowFail: " + errMsg);
                             if (mMediationRewardedAdCallback != null)
                                 mMediationRewardedAdCallback.onAdFailedToShow(
-                                        new AdError(errCode, errMsg, AD_NETWORK_NAME));
+                                        new AdError(errCode, errMsg, AlxAdSDK.getNetWorkName()));
                         }
 
                         @Override
@@ -268,24 +267,12 @@ public class AlxRewardVideoAdapter extends Adapter implements MediationRewardedA
             sid = json.getString("sid");
             token = json.getString("token");
             unitid = json.getString("unitid");
-            String debug = json.optString("isdebug","false");
+            String debug = json.optString("isdebug", "false");
             if (TextUtils.equals(debug, "true")) {
                 isdebug = true;
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");
-        }
-        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(token)) {
-            try {
-                JSONObject json = new JSONObject(s);
-                appid = json.getString("appid");
-                sid = json.getString("appkey");
-                token = json.getString("license");
-                unitid = json.getString("unitid");
-                isdebug = json.optBoolean("isdebug");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage() + "");
-            }
         }
     }
 

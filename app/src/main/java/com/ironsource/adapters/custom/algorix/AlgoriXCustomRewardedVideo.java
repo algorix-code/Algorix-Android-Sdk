@@ -7,9 +7,9 @@ import android.util.Log;
 
 import com.alxad.api.AlxRewardVideoAD;
 import com.alxad.api.AlxRewardVideoADListener;
-import com.ironsource.mediationsdk.adunit.adapter.listener.RewardedVideoAdListener;
 import com.ironsource.mediationsdk.adunit.adapter.BaseRewardedVideo;
 import com.ironsource.mediationsdk.adunit.adapter.listener.NetworkInitializationListener;
+import com.ironsource.mediationsdk.adunit.adapter.listener.RewardedVideoAdListener;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType;
 import com.ironsource.mediationsdk.model.NetworkSettings;

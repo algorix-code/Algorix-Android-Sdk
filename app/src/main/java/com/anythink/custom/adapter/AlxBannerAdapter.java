@@ -22,7 +22,6 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
     private String appid = "";
     private String sid = "";
     private String token = "";
-//    private String size = "";
     private Boolean isdebug = false;
     AlxBannerView mBannerView;
 
@@ -42,27 +41,23 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
 
     private boolean parseServer(Map<String, Object> serverExtras) {
         try {
-            if (serverExtras.containsKey("unitid")) {
-                unitid = (String) serverExtras.get("unitid");
-            }
-            if (serverExtras.containsKey("license")) {
-                token = (String) serverExtras.get("license");
-            } else if (serverExtras.containsKey("token")) {
-                token = (String) serverExtras.get("token");
-            }
-            if (serverExtras.containsKey("appkey")) {
-                sid = (String) serverExtras.get("appkey");
-            } else if (serverExtras.containsKey("sid")) {
-                sid = (String) serverExtras.get("sid");
-            }
             if (serverExtras.containsKey("appid")) {
                 appid = (String) serverExtras.get("appid");
             }
+            if (serverExtras.containsKey("sid")) {
+                sid = (String) serverExtras.get("sid");
+            }
+            if (serverExtras.containsKey("token")) {
+                token = (String) serverExtras.get("token");
+            }
+            if (serverExtras.containsKey("unitid")) {
+                unitid = (String) serverExtras.get("unitid");
+            }
 
             if (serverExtras.containsKey("isdebug")) {
-                String test = serverExtras.get("isdebug").toString();
-                Log.e(TAG, "alx debug mode:" + test);
-                if (test.equals("true")) {
+                String debug = serverExtras.get("isdebug").toString();
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (TextUtils.equals(debug,"true")) {
                     isdebug = true;
                 } else {
                     isdebug = false;
@@ -70,18 +65,11 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
             } else {
                 Log.e(TAG, "alx debug mode: false");
             }
-            if (serverExtras.containsKey("tag")) {
-                String tag = serverExtras.get("tag").toString();
-                Log.e(TAG, "alx json tag:" + tag);
-            }
-//            if (serverExtras.containsKey("size")) {
-//                size = serverExtras.get("size").toString();
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
-            Log.i(TAG, "alx unitid | token | id | appid is empty");
+            Log.i(TAG, "alx unitid | token | sid | appid is empty");
             return false;
         }
         return true;

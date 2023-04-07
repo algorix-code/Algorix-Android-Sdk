@@ -57,40 +57,29 @@ public class AlxNativeAdapter extends TPNativeAdapter {
 
     private boolean parseServer(Map<String, String> serverExtras) {
         try {
+            if (serverExtras.containsKey("appid")) {
+                appid = serverExtras.get("appid");
+            }
+            if (serverExtras.containsKey("sid")) {
+                sid = serverExtras.get("sid");
+            }
+            if (serverExtras.containsKey("token")) {
+                token = serverExtras.get("token");
+            }
             if (serverExtras.containsKey("unitid")) {
                 unitid = serverExtras.get("unitid");
             }
-            if (serverExtras.containsKey("appid")) {
-                appid = serverExtras.get("appid");
-
-            } else if (serverExtras.containsKey("appkey")) {
-                appid = serverExtras.get("appkey");
-            }
-            if (serverExtras.containsKey("appkey")) {
-                sid = serverExtras.get("appkey");
-            } else if (serverExtras.containsKey("sid")) {
-                sid = serverExtras.get("sid");
-            }
-            if (serverExtras.containsKey("license")) {
-                token = serverExtras.get("license");
-            } else if (serverExtras.containsKey("token")) {
-                token = serverExtras.get("token");
-            }
 
             if (serverExtras.containsKey("isdebug")) {
-                String test = serverExtras.get("isdebug");
-                Log.e(TAG, "alx debug mode:" + test);
-                if (test.equals("true")) {
+                String debug = serverExtras.get("isdebug");
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (TextUtils.equals(debug,"true")) {
                     isdebug = true;
                 } else {
                     isdebug = false;
                 }
             } else {
                 Log.e(TAG, "alx debug mode: false");
-            }
-            if (serverExtras.containsKey("tag")) {
-                String tag = serverExtras.get("tag");
-                Log.e(TAG, "alx json tag:" + tag);
             }
         } catch (Exception e) {
             e.printStackTrace();
