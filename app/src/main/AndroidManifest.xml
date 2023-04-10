@@ -24,7 +24,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         android:debuggable="true"
-        tools:ignore="HardcodedDebugMode">
+        tools:ignore="HardcodedDebugMode"
+        tools:replace="android:networkSecurityConfig">
 
         <activity
             android:name=".alx.SplashActivity"
@@ -143,7 +144,13 @@
 
 
         <!-- 下面是配置信息 -->
-        <!--TopOn平台//////start     -->
+        <!--Admob平台——start -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4920936244266233~6784498952"/>
+        <!--Admob平台——end -->
+
+        <!--TopOn平台——start -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -151,10 +158,10 @@
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
-        <!--TopOn平台//////end  -->
+        <!--TopOn平台——end -->
 
 
-        <!--ironsource平台//////start     -->
+        <!--ironsource平台——start -->
         <activity
             android:name="com.ironsource.sdk.controller.ControllerActivity"
             android:configChanges="orientation|screenSize"
@@ -173,13 +180,12 @@
         <provider
             android:name="com.ironsource.lifecycle.IronsourceLifecycleProvider"
             android:authorities="${applicationId}.IronsourceLifecycleProvider" />
-        <!--ironsource平台//////end     -->
+        <!--ironsource平台——end -->
 
-        <!--max平台//////start     -->
+        <!--max平台——start -->
         <meta-data android:name="applovin.sdk.key"
             android:value="95-ffs7CG-uU8Z3exG1oky-tAdQGD1z1kHK365gIQdSIH90WNUv2fTCPFMBhVmH9Fx0o1GhhAX7DQDrnACsVIv"/>
-
-        <!--max平台//////start     -->
+        <!--max平台——end -->
 
     </application>
 

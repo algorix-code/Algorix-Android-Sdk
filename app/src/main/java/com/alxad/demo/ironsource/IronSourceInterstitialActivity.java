@@ -8,17 +8,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.alxad.demo.R;
 import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
 import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.sdk.InterstitialListener;
+import com.ironsource.mediationsdk.sdk.LevelPlayInterstitialListener;
 
 public class IronSourceInterstitialActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = "IronSourceInterstitial";
-    private IronSource mIronSource;
     private TextView mTvTip;
     private TextView mTvShow;
     private long startTime;
@@ -37,7 +36,6 @@ public class IronSourceInterstitialActivity extends AppCompatActivity implements
         IronSource.getAdvertiserId(this);
         //Network Connectivity Status
         IronSource.shouldTrackNetworkState(this, true);
-        // IronSource.init(this, "6315421",IronSource.AD_UNIT.INTERSTITIAL);
     }
 
     private void initView() {
@@ -63,48 +61,50 @@ public class IronSourceInterstitialActivity extends AppCompatActivity implements
         mTvTip.setText(R.string.loading);
         startTime = System.currentTimeMillis();
         mTvShow.setEnabled(false);
-        IronSource.setInterstitialListener(new InterstitialListener() {
+
+        IronSource.setLevelPlayInterstitialListener(new LevelPlayInterstitialListener() {
             @Override
-            public void onInterstitialAdReady() {
-                Log.d(TAG, "onInterstitialAdReady");
+            public void onAdReady(AdInfo adInfo) {
+                Log.d(TAG, "onAdReady");
                 Toast.makeText(getBaseContext(), getString(R.string.load_success), Toast.LENGTH_SHORT).show();
                 mTvTip.setText(getString(R.string.format_load_success, (System.currentTimeMillis() - startTime) / 1000));
                 mTvShow.setEnabled(true);
             }
 
             @Override
-            public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                Log.d(TAG, "onInterstitialAdLoadFailed" + ironSourceError);
+            public void onAdLoadFailed(IronSourceError ironSourceError) {
+                Log.d(TAG, "onAdLoadFailed: " + ironSourceError.getErrorCode()+";"+ironSourceError.getErrorMessage());
                 Toast.makeText(getBaseContext(), getString(R.string.load_failed), Toast.LENGTH_SHORT).show();
-                mTvTip.setText(getString(R.string.format_load_failed, ironSourceError.toString()));
+                mTvTip.setText(getString(R.string.format_load_failed, ironSourceError.getErrorMessage()));
                 mTvShow.setEnabled(false);
             }
 
             @Override
-            public void onInterstitialAdOpened() {
-
+            public void onAdOpened(AdInfo adInfo) {
+                Log.d(TAG, "onAdOpened");
             }
 
             @Override
-            public void onInterstitialAdClosed() {
-                Log.d(TAG, "onInterstitialAdClosed");
+            public void onAdShowSucceeded(AdInfo adInfo) {
+                Log.d(TAG, "onAdShowSucceeded");
             }
 
             @Override
-            public void onInterstitialAdShowSucceeded() {
-                Log.d(TAG, "onInterstitialAdShowSucceeded");
+            public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
+                Log.d(TAG, "onAdShowFailed: " + ironSourceError.getErrorCode()+";"+ironSourceError.getErrorMessage());
             }
 
             @Override
-            public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                Log.d(TAG, "onInterstitialAdShowFailed: " + ironSourceError.toString());
+            public void onAdClicked(AdInfo adInfo) {
+                Log.d(TAG, "onAdClicked");
             }
 
             @Override
-            public void onInterstitialAdClicked() {
-                Log.d(TAG, "onInterstitialAdClicked");
+            public void onAdClosed(AdInfo adInfo) {
+                Log.d(TAG, "onAdClosed");
             }
         });
+
         IronSource.loadInterstitial();
     }
 
