@@ -3,8 +3,10 @@ package com.alxad.demo.topon;
 import android.os.Bundle;
 
 
+import com.alxad.demo.AdConfig;
 import com.alxad.demo.BaseListActivity;
 import com.alxad.demo.R;
+import com.anythink.core.api.ATSDK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class TopOnAdDemoListActivity extends BaseListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initSdk();
     }
 
     @Override
@@ -36,6 +39,11 @@ public class TopOnAdDemoListActivity extends BaseListActivity {
         list.add(item);
 
         return list;
+    }
+
+    public  void initSdk () {
+        ATSDK.init(getApplicationContext(), AdConfig.TOPON_APP_ID, AdConfig.TOPON_KEY);
+        ATSDK.setNetworkLogDebug(true);
     }
 
 }

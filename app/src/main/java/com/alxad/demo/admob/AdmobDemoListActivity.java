@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import com.alxad.demo.BaseListActivity;
 import com.alxad.demo.R;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,7 @@ public class AdmobDemoListActivity extends BaseListActivity {
 
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        initSdk();
     }
 
     @Override
@@ -28,6 +32,14 @@ public class AdmobDemoListActivity extends BaseListActivity {
         list.add(interstitialItem);
         list.add(nativeItem);
         return list;
+    }
+
+    public void initSdk(){
+        MobileAds.initialize(getApplicationContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
     }
 
 }
