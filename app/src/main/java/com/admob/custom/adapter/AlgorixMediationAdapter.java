@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,8 @@ import com.alxad.api.nativead.AlxNativeAdLoader;
 import com.alxad.api.nativead.AlxNativeAdView;
 import com.alxad.api.nativead.AlxNativeEventListener;
 import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.VersionInfo;
 import com.google.android.gms.ads.mediation.Adapter;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
@@ -45,8 +47,8 @@ import com.google.android.gms.ads.mediation.MediationNativeAdConfiguration;
 import com.google.android.gms.ads.mediation.MediationRewardedAd;
 import com.google.android.gms.ads.mediation.MediationRewardedAdCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAdConfiguration;
-import com.google.android.gms.ads.mediation.UnifiedNativeAdMapper;
-import com.google.android.gms.ads.mediation.VersionInfo;
+import com.google.android.gms.ads.mediation.NativeAdMapper;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
 import org.json.JSONObject;
@@ -61,7 +63,7 @@ import java.util.Map;
 public class AlgorixMediationAdapter extends Adapter implements MediationBannerAd, MediationInterstitialAd, MediationRewardedAd {
     private static final String TAG = "AlgorixMediationAdapter";
 
-    private static final String ADAPTER_VERSION = "3.5.0";
+    private static final String ADAPTER_VERSION = "3.9.0";
 
     private static final String ALX_AD_UNIT_KEY = "parameter";
 
@@ -69,7 +71,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     private String appid = "";
     private String sid = "";
     private String token = "";
-    private Boolean isdebug = false;
+    private Boolean isDebug = null;
 
     //banner
     private MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> mBannerLoadCallback;
@@ -77,7 +79,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     AlxBannerView mBannerView;
 
     //native
-    private MediationAdLoadCallback<UnifiedNativeAdMapper, MediationNativeAdCallback> mNativeLoadCallback;
+    private MediationAdLoadCallback<NativeAdMapper, MediationNativeAdCallback> mNativeLoadCallback;
     private MediationNativeAdCallback mNativeEventCallback;
     private AlxNativeAd nativeAd;
     private CustomNativeAdMapper nativeAdMapper;
@@ -95,6 +97,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     @Override
     public void initialize(Context context, InitializationCompleteCallback initializationCompleteCallback, List<MediationConfiguration> list) {
         Log.d(TAG, "alx-admob-adapter: initialize");
+        Log.d(TAG, "sdk-version:" + MobileAds.getVersion().toString());
         if (context == null) {
             initializationCompleteCallback.onInitializationFailed(
                     "Initialization Failed: Context is null.");
@@ -123,7 +126,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
     }
 
     @Override
-    public void loadNativeAd(@NonNull MediationNativeAdConfiguration configuration, @NonNull MediationAdLoadCallback<UnifiedNativeAdMapper, MediationNativeAdCallback> callback) {
+    public void loadNativeAdMapper(@NonNull MediationNativeAdConfiguration configuration, @NonNull MediationAdLoadCallback<NativeAdMapper, MediationNativeAdCallback> callback) throws RemoteException {
         Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
         Log.d(TAG, "alx-admob-adapter: loadNativeAd");
         mNativeLoadCallback = callback;
@@ -217,6 +220,9 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
         try {
             Log.i(TAG, "alx token: " + token + " alx appid: " + appid + "alx sid: " + sid);
             // init
+            if (isDebug != null) {
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
             AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override
                 public void onInit(boolean isOk, String msg) {
@@ -244,7 +250,6 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
 //            AlxAdSDK.setBelowConsentAge(true);
 //            // set CCPA
 //            AlxAdSDK.subjectToUSPrivacy("1YYY");
-            AlxAdSDK.setDebug(isdebug);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
@@ -479,9 +484,13 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
             sid = json.getString("sid");
             token = json.getString("token");
             unitid = json.getString("unitid");
-            String debug = json.optString("isdebug", "false");
-            if (TextUtils.equals(debug, "true")) {
-                isdebug = true;
+            String debug = json.optString("isdebug");
+            if(debug != null){
+                if(debug.equalsIgnoreCase("true")){
+                    isDebug = Boolean.TRUE;
+                }else if(debug.equalsIgnoreCase("false")){
+                    isDebug = Boolean.FALSE;
+                }
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");
@@ -534,7 +543,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
         return null;
     }
 
-    private class CustomNativeAdMapper extends UnifiedNativeAdMapper {
+    private class CustomNativeAdMapper extends NativeAdMapper {
 
         private AlxNativeAd bean;
         private Context context;

@@ -1,23 +1,22 @@
 package com.alxad.demo.max;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.alxad.demo.AdConfig;
 import com.alxad.demo.BaseListActivity;
 import com.alxad.demo.R;
-import com.applovin.sdk.AppLovinPrivacySettings;
+import com.applovin.sdk.AppLovinMediationProvider;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
-import com.applovin.sdk.AppLovinUserService;
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaxDemoListActivity extends BaseListActivity {
+public class MaxDemoListActivity extends BaseListActivity  {
     private static final String TAG = "MaxDemoListActivity";
 
 
@@ -48,61 +47,67 @@ public class MaxDemoListActivity extends BaseListActivity {
 
     //Applovin广告初始化
     private void initSdk() {
-        AppLovinSdk.getInstance(mContext.getApplicationContext()).setMediationProvider("algorix");
-        AppLovinSdk.initializeSdk(this, new AppLovinSdk.SdkInitializationListener() {
+//        Max 13版本及以上
+        AppLovinSdkInitializationConfiguration initConfig = AppLovinSdkInitializationConfiguration.builder
+                        (AdConfig.MAX_APP_KEY, this.getApplicationContext())
+                .setMediationProvider(AppLovinMediationProvider.MAX)
+                .build();
+
+        // Initialize the SDK with the configuration
+        AppLovinSdk.getInstance( this ).initialize( initConfig, new AppLovinSdk.SdkInitializationListener()
+        {
             @Override
-            public void onSdkInitialized(AppLovinSdkConfiguration config) {
-                String name = config.getConsentDialogState().name();
-                Log.i(TAG, "AppLovinSdk-init:" + name);
-                // showDialog();
-
-                if (config.getConsentDialogState() == AppLovinSdkConfiguration.ConsentDialogState.APPLIES) {
-                    AppLovinUserService userService = AppLovinSdk.getInstance(mContext.getApplicationContext()).getUserService();
-                    userService.showConsentDialog(MaxDemoListActivity.this, new AppLovinUserService.OnConsentDialogDismissListener() {
-                        @Override
-                        public void onDismiss() {
-
-                        }
-                    });
-                }
-
+            public void onSdkInitialized(final AppLovinSdkConfiguration sdkConfig)
+            {
+                Log.i(TAG, "AppLovinSdk-init:" );
             }
-        });
+        } );
     }
 
-    private void showDialog() {
-        Log.i(TAG, "showDialog:" + Thread.currentThread().getName());
-        final AlertDialog dialog = new AlertDialog.Builder(mContext)
-                .setTitle("update config info")
-                .setMessage("update config info")
-                .setPositiveButton("set to true", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        AppLovinPrivacySettings.setHasUserConsent(true, mContext);
-                        AppLovinPrivacySettings.setIsAgeRestrictedUser(true, mContext);
-                        AppLovinPrivacySettings.setDoNotSell(true, mContext);
-                        Log.d(TAG, "true-onclick:" + AppLovinPrivacySettings.hasUserConsent(mContext));
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("set to false", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        AppLovinPrivacySettings.setHasUserConsent(false, mContext);
-                        AppLovinPrivacySettings.setIsAgeRestrictedUser(false, mContext);
-                        AppLovinPrivacySettings.setDoNotSell(false, mContext);
-                        Log.d(TAG, "false-onclick:" + AppLovinPrivacySettings.hasUserConsent(mContext));
-                        dialog.dismiss();
-                    }
-                })
-                .setNeutralButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(false)
-                .show();
-    }
+//    Max 13版本以下
+//    private void initMaxBelow13(){
+//        AppLovinSdk.getInstance(mContext.getApplicationContext()).setMediationProvider("algorix");
+//        AppLovinSdk.initializeSdk(this, new AppLovinSdk.SdkInitializationListener() {
+//            @Override
+//            public void onSdkInitialized(AppLovinSdkConfiguration config) {
+//                String name = config.getConsentDialogState().name();
+//                Log.i(TAG, "AppLovinSdk-init:" + name);
+//                // showDialog();
+//            }
+//        });
+//    }
+
+//    private void showDialog() {
+//        Log.i(TAG, "showDialog:" + Thread.currentThread().getName());
+//        final AlertDialog dialog = new AlertDialog.Builder(mContext)
+//                .setTitle("update config info")
+//                .setMessage("update config info")
+//                .setPositiveButton("set to true", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        AppLovinPrivacySettings.setHasUserConsent(true, mContext);
+//                        AppLovinPrivacySettings.setDoNotSell(true, mContext);
+//                        Log.d(TAG, "true-onclick:" + AppLovinPrivacySettings.hasUserConsent(mContext));
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNegativeButton("set to false", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        AppLovinPrivacySettings.setHasUserConsent(false, mContext);
+//                        AppLovinPrivacySettings.setDoNotSell(false, mContext);
+//                        Log.d(TAG, "false-onclick:" + AppLovinPrivacySettings.hasUserConsent(mContext));
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNeutralButton("cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setCancelable(false)
+//                .show();
+//    }
 
 }

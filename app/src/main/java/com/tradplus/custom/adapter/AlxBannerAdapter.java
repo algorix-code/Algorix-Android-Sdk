@@ -24,7 +24,7 @@ public class AlxBannerAdapter extends TPBannerAdapter {
     private String sid = "";
     private String token = "";
     private Boolean isShowClose = false;
-    private Boolean isdebug = false;
+    private Boolean isDebug = null;
     AlxBannerView mBannerView;
     private TPBannerAdImpl mTPBannerAd;
 
@@ -59,13 +59,13 @@ public class AlxBannerAdapter extends TPBannerAdapter {
             if (serverExtras.containsKey("isdebug")) {
                 String debug = serverExtras.get("isdebug");
                 Log.e(TAG, "alx debug mode:" + debug);
-                if (TextUtils.equals(debug,"true")) {
-                    isdebug = true;
-                } else {
-                    isdebug = false;
+                if (debug != null) {
+                    if (debug.equalsIgnoreCase("true")) {
+                        isDebug = Boolean.TRUE;
+                    } else if (debug.equalsIgnoreCase("false")) {
+                        isDebug = Boolean.FALSE;
+                    }
                 }
-            } else {
-                Log.e(TAG, "alx debug mode: false");
             }
 
             if (serverExtras.containsKey("isShowClose")) {
@@ -93,7 +93,9 @@ public class AlxBannerAdapter extends TPBannerAdapter {
         try {
             Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
-            AlxAdSDK.setDebug(isdebug);
+            if (isDebug != null) {
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
 
             AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override

@@ -7,6 +7,6 @@ package com.ironsource.adapters.custom.algorix;
  */
 public interface AlxMetaInf {
 
-    String ADAPTER_VERSION = "3.5.2";
+    String ADAPTER_VERSION = "3.8.2";
 
 }

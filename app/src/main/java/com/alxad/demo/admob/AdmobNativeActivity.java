@@ -21,6 +21,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.nativead.MediaView;
 import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.nativead.NativeAdView;
 
 
@@ -113,7 +114,7 @@ public class AdmobNativeActivity extends AppCompatActivity implements View.OnCli
                         Log.d(TAG, "onAdImpression");
                     }
                 })
-                .withNativeAdOptions(new com.google.android.gms.ads.nativead.NativeAdOptions.Builder().build())
+                .withNativeAdOptions(new NativeAdOptions.Builder().build())
                 .build();
         mAdLoader.loadAd(new AdRequest.Builder().build());
     }

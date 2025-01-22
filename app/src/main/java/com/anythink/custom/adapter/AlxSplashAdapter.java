@@ -25,7 +25,7 @@ public class AlxSplashAdapter extends CustomSplashAdapter {
     private String token = "";
     private int mImageWidth; //请求广告图的宽度：单位px
     private int mImageHeight; //请求广告图的高度: 单位px
-    private Boolean isdebug = false;
+    private Boolean isDebug = null;
     private AlxSplashAd mAdObj;
     private boolean isReady = false;
 
@@ -60,25 +60,30 @@ public class AlxSplashAdapter extends CustomSplashAdapter {
             }
 
             if (serverExtras.containsKey("isdebug")) {
-                String debug = serverExtras.get("isdebug").toString();
-                Log.e(TAG, "alx debug mode:" + debug);
-                if (TextUtils.equals(debug,"true")) {
-                    isdebug = true;
-                } else {
-                    isdebug = false;
+                Object obj = serverExtras.get("isdebug");
+                String debug = null;
+                if (obj != null && obj instanceof String) {
+                    debug = (String) obj;
                 }
-            } else {
-                Log.e(TAG, "alx debug mode: false");
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (debug != null) {
+                    if (debug.equalsIgnoreCase("true")) {
+                        isDebug = Boolean.TRUE;
+                    } else if (debug.equalsIgnoreCase("false")) {
+                        isDebug = Boolean.FALSE;
+                    }
+                }
             }
-            String width = null;
-            String height = null;
-            if (serverExtras.containsKey("imageWidth")) {
-                width = serverExtras.get("imageWidth").toString();
-            }
-            if (serverExtras.containsKey("imageHeight")) {
-                height = serverExtras.get("imageHeight").toString();
-            }
+
             try {
+                String width = null;
+                String height = null;
+                if (serverExtras.containsKey("imageWidth")) {
+                    width = (String) serverExtras.get("imageWidth");
+                }
+                if (serverExtras.containsKey("imageHeight")) {
+                    height = (String) serverExtras.get("imageHeight");
+                }
                 if (!TextUtils.isEmpty(width) && !TextUtils.isEmpty(height)) {
                     mImageWidth = Integer.parseInt(width);
                     mImageHeight = Integer.parseInt(height);
@@ -92,9 +97,6 @@ public class AlxSplashAdapter extends CustomSplashAdapter {
         }
         if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
             Log.i(TAG, "alx unitid | token | id | appid is empty");
-            if (mLoadListener != null) {
-                mLoadListener.onAdLoadError("", "alx unitid | token | id | appid is empty.");
-            }
             return false;
         }
         return true;
@@ -104,7 +106,9 @@ public class AlxSplashAdapter extends CustomSplashAdapter {
         try {
             Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
-            AlxAdSDK.setDebug(isdebug);
+            if (isDebug != null) {
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
 
             AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override

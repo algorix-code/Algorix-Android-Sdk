@@ -7,6 +7,6 @@ package com.admob.custom.adapter;
  */
 public interface AlxMetaInf {
 
-    String ADAPTER_VERSION = "3.5.2";
+    String ADAPTER_VERSION = "3.9.0";
 
 }

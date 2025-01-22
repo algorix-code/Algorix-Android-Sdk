@@ -12,6 +12,8 @@ import com.alxad.api.AlxInterstitialAD;
 import com.alxad.api.AlxInterstitialADListener;
 import com.alxad.api.AlxSdkInitCallback;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.VersionInfo;
 import com.google.android.gms.ads.mediation.Adapter;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
@@ -19,7 +21,6 @@ import com.google.android.gms.ads.mediation.MediationConfiguration;
 import com.google.android.gms.ads.mediation.MediationInterstitialAd;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdCallback;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration;
-import com.google.android.gms.ads.mediation.VersionInfo;
 
 import org.json.JSONObject;
 
@@ -36,7 +37,7 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
     private String appid = "";
     private String sid = "";
     private String token = "";
-    private Boolean isdebug = false;
+    private Boolean isDebug = null;
 
     private MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> mMediationLoadCallback;
     private MediationInterstitialAdCallback mMediationEventCallback;
@@ -46,6 +47,7 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
     @Override
     public void initialize(Context context, InitializationCompleteCallback initializationCompleteCallback, List<MediationConfiguration> list) {
         Log.d(TAG, "alx-admob-adapter: initialize");
+        Log.d(TAG, "sdk-version:" + MobileAds.getVersion().toString());
         if (context == null) {
             initializationCompleteCallback.onInitializationFailed(
                     "Initialization Failed: Context is null.");
@@ -56,6 +58,7 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
 
     @Override
     public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
+        Log.d(TAG, "sdk-version:" + MobileAds.getVersion().toString());
         Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
         Log.d(TAG, "alx-admob-adapter: loadInterstitialAd");
         mMediationLoadCallback = callback;
@@ -91,21 +94,25 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
         try {
             Log.i(TAG, "alx token: " + token + " alx appid: " + appid + "alx sid: " + sid);
             // init
+            if(isDebug != null){
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
             AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override
                 public void onInit(boolean isOk, String msg) {
                     preloadAd(context);
                 }
             });
-//            // set GDPR
-//            AlxAdSDK.setSubjectToGDPR(true);
-//            // set GDPR Consent
-//            AlxAdSDK.setUserConsent("1");
-//            // set COPPA
-//            AlxAdSDK.setBelowConsentAge(true);
-//            // set CCPA
-//            AlxAdSDK.subjectToUSPrivacy("1YYY");
-            AlxAdSDK.setDebug(isdebug);
+//                // set GDPR
+//                // Subject to GDPR Flag: Please pass a Boolean value to indicate if the user is subject to GDPR regulations or not.
+//                // Your app should make its own determination as to whether GDPR is applicable to the user or not.
+//                AlxAdSDK.setSubjectToGDPR(true);
+//                // set GDPR Consent
+//                AlxAdSDK.setUserConsent("1");
+//                // set COPPA
+//                AlxAdSDK.setBelowConsentAge(true);
+//                // set CCPA
+//                AlxAdSDK.subjectToUSPrivacy("1YYY");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
@@ -151,9 +158,13 @@ public class AlxInterstitialAdapter extends Adapter implements MediationIntersti
             sid = json.getString("sid");
             token = json.getString("token");
             unitid = json.getString("unitid");
-            String debug = json.optString("isdebug", "false");
-            if (TextUtils.equals(debug, "true")) {
-                isdebug = true;
+            String debug = json.optString("isdebug");
+            if(debug != null){
+                if(debug.equalsIgnoreCase("true")){
+                    isDebug = Boolean.TRUE;
+                }else if(debug.equalsIgnoreCase("false")){
+                    isDebug = Boolean.FALSE;
+                }
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");

@@ -7,6 +7,6 @@ package com.anythink.custom.adapter;
  */
 public interface AlxMetaInf {
 
-    String ADAPTER_VERSION = "3.6.0";
+    String ADAPTER_VERSION = "3.8.2";
 
 }

@@ -22,7 +22,7 @@ public class AlxSplashAdapter extends TPSplashAdapter {
     private String appid = "";
     private String sid = "";
     private String token = "";
-    private Boolean isdebug = false;
+    private Boolean isDebug = null;
     private AlxSplashAd mAdObj;
     private boolean isReady = false;
 
@@ -58,23 +58,19 @@ public class AlxSplashAdapter extends TPSplashAdapter {
             if (serverExtras.containsKey("isdebug")) {
                 String debug = serverExtras.get("isdebug");
                 Log.e(TAG, "alx debug mode:" + debug);
-                if (TextUtils.equals(debug,"true")) {
-                    isdebug = true;
-                } else {
-                    isdebug = false;
+                if (debug != null) {
+                    if (debug.equalsIgnoreCase("true")) {
+                        isDebug = Boolean.TRUE;
+                    } else if (debug.equalsIgnoreCase("false")) {
+                        isDebug = Boolean.FALSE;
+                    }
                 }
-            } else {
-                Log.e(TAG, "alx debug mode: false");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
             Log.i(TAG, "alx unitid | token | sid | appid is empty");
-            if (mLoadAdapterListener != null) {
-                mLoadAdapterListener.loadAdapterLoadFailed(
-                        new TPError(TPError.ADAPTER_CONFIGURATION_ERROR + ":alx unitid | token | sid | appid is empty."));
-            }
             return false;
         }
         return true;
@@ -84,7 +80,9 @@ public class AlxSplashAdapter extends TPSplashAdapter {
         try {
             Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
-            AlxAdSDK.setDebug(isdebug);
+            if (isDebug != null) {
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
             AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override
                 public void onInit(boolean isOk, String msg) {

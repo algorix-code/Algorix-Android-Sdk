@@ -8,10 +8,16 @@ import android.view.View;
 import com.alxad.api.AlxAdSDK;
 import com.alxad.api.AlxBannerView;
 import com.alxad.api.AlxBannerViewAdListener;
-import com.alxad.api.AlxSdkInitCallback;
 import com.anythink.banner.unitgroup.api.CustomBannerAdapter;
+import com.anythink.core.api.ATAdConst;
+import com.anythink.core.api.ATBiddingListener;
+import com.anythink.core.api.ATBiddingNotice;
+import com.anythink.core.api.ATBiddingResult;
+import com.anythink.core.api.BaseAd;
+import com.anythink.core.api.MediationInitCallback;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * TopOn Banner广告适配器
@@ -22,16 +28,34 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
     private String appid = "";
     private String sid = "";
     private String token = "";
-    private Boolean isdebug = false;
+    private String host = "";
+    private Boolean isDebug = null;
     AlxBannerView mBannerView;
+    private ATBiddingListener mBiddingListener;
+
+
+
+    public void startBid(Context context) {
+        Log.d(TAG,"startBid ");
+        mBannerView = new AlxBannerView(context);
+        loadAd(context);
+
+    }
+
+    @Override
+    public boolean startBiddingRequest(final Context context, Map<String, Object> serverExtra, Map<String, 	Object> localExtra, final ATBiddingListener biddingListener) {
+        //从serverExtra中获取后台配置的自定义平台的广告位ID
+        mBiddingListener = biddingListener;
+        loadCustomNetworkAd(context,serverExtra,localExtra);
+        return true;
+    }
 
 
     @Override
-    public void loadCustomNetworkAd(Context context, Map<String, Object> serverExtras, Map<String, Object> localExtras) {
+    public void loadCustomNetworkAd(Context context, Map<String, Object> serverExtra, Map<String, Object> localExtras) {
         Log.d(TAG, "alx-topon-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
-        Log.i(TAG, "loadCustomNetworkAd");
-        if (parseServer(serverExtras)) {
-            initSdk(context);
+        if (parseServer(serverExtra)) {
+            initSdk(context,serverExtra);
         } else {
             if (mLoadListener != null) {
                 mLoadListener.onAdLoadError("", "alx apppid | token | sid | appid is empty.");
@@ -41,6 +65,9 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
 
     private boolean parseServer(Map<String, Object> serverExtras) {
         try {
+            if (serverExtras.containsKey("host")) {
+                host = (String) serverExtras.get("host");
+            }
             if (serverExtras.containsKey("appid")) {
                 appid = (String) serverExtras.get("appid");
             }
@@ -55,45 +82,53 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
             }
 
             if (serverExtras.containsKey("isdebug")) {
-                String debug = serverExtras.get("isdebug").toString();
-                Log.e(TAG, "alx debug mode:" + debug);
-                if (TextUtils.equals(debug,"true")) {
-                    isdebug = true;
-                } else {
-                    isdebug = false;
+                Object obj = serverExtras.get("isdebug");
+                String debug = null;
+                if (obj != null && obj instanceof String) {
+                    debug = (String) obj;
                 }
-            } else {
-                Log.e(TAG, "alx debug mode: false");
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (debug != null) {
+                    if (debug.equalsIgnoreCase("true")) {
+                        isDebug = Boolean.TRUE;
+                    } else if (debug.equalsIgnoreCase("false")) {
+                        isDebug = Boolean.FALSE;
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
-            Log.i(TAG, "alx unitid | token | sid | appid is empty");
+            Log.i(TAG, "alx  unitid | token | sid | appid is empty");
             return false;
         }
         return true;
     }
 
-    private void initSdk(final Context context) {
-        try {
-            Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
-            AlxAdSDK.setDebug(isdebug);
+    private void initSdk(final Context context, Map<String, Object> serverExtra) {
+        AlxSdkInitManager.getInstance().initSDK(context, serverExtra, new MediationInitCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG,"AlxSdkInit success");
+                startBid(context);
+            }
 
-            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
-                @Override
-                public void onInit(boolean isOk, String msg) {
-                    //if (isOk){
-                    Log.i(TAG, "sdk onInit:" + isOk);
-                    loadAd(context);
-                    //}
+            @Override
+            public void onFail(String s) {
+                Log.d(TAG,"AlxSdkInit fail : "+s);
+                //通过ATBiddingListener，回调竞价失败
+                if (mBiddingListener != null) {
+                    mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail(s), null);
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            }
+        });
+
     }
+
 
     private void loadAd(Context context) {
         mBannerView = new AlxBannerView(context);
@@ -103,12 +138,34 @@ public class AlxBannerAdapter extends CustomBannerAdapter {
                 if (mLoadListener != null) {
                     mLoadListener.onAdCacheLoaded();
                 }
+
+                //get price
+                double bidPrice = mBannerView.getPrice();
+
+                //get currency
+                ATAdConst.CURRENCY currency = ATAdConst.CURRENCY.USD;
+
+                //get uuid
+                String token = UUID.randomUUID().toString();
+
+                //BiddingNotice
+                ATBiddingNotice biddingNotice = null;
+
+                //BaseAd
+                BaseAd basead = null;
+                if (mBiddingListener != null) {
+                    mBiddingListener.onC2SBiddingResultWithCache(
+                            ATBiddingResult.success(bidPrice, token, biddingNotice, currency), basead);
+                }
             }
 
             @Override
             public void onAdError(int errorCode, String errorMsg) {
                 if (mLoadListener != null) {
                     mLoadListener.onAdLoadError(errorCode + "", errorMsg);
+                }
+                if (mBiddingListener != null) {
+                    mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail(errorMsg), null);
                 }
             }
 

@@ -26,7 +26,7 @@ public class AlxInterstitialAdapter extends TPInterstitialAdapter {
     private String appid = "";
     private String sid = "";
     private String token = "";
-    private Boolean isdebug = false;
+    private Boolean isDebug = null;
     private Context mContext;
 
 
@@ -62,13 +62,13 @@ public class AlxInterstitialAdapter extends TPInterstitialAdapter {
             if (serverExtras.containsKey("isdebug")) {
                 String debug = serverExtras.get("isdebug");
                 Log.e(TAG, "alx debug mode:" + debug);
-                if (TextUtils.equals(debug,"true")) {
-                    isdebug = true;
-                } else {
-                    isdebug = false;
+                if (debug != null) {
+                    if (debug.equalsIgnoreCase("true")) {
+                        isDebug = Boolean.TRUE;
+                    } else if (debug.equalsIgnoreCase("false")) {
+                        isDebug = Boolean.FALSE;
+                    }
                 }
-            } else {
-                Log.e(TAG, "alx debug mode: false");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +84,9 @@ public class AlxInterstitialAdapter extends TPInterstitialAdapter {
         try {
             Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
 
-            AlxAdSDK.setDebug(isdebug);
+            if (isDebug != null) {
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
             AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
                 @Override
                 public void onInit(boolean isOk, String msg) {
