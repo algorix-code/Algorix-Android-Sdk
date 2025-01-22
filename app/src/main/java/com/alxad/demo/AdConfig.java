@@ -48,7 +48,7 @@ public class AdConfig {
 
 
     //Max 平台广告配置信息
-    public static final String MAX_APP_KEY = "";
+    public static final String MAX_APP_KEY = "95-ffs7CG-uU8Z3exG1oky-tAdQGD1z1kHK365gIQdSIH90WNUv2fTCPFMBhVmH9Fx0o1GhhAX7DQDrnACsVIv";
     public static final String MAX_BANNER_AD = "d784fd2128f4d859";
     public static final String MAX_INTERSTITIAL_AD = "8309f13fe976b315";
     public static final String MAX_REWARD_VIDEO_AD = "03cae3773972a7ee";

@@ -183,8 +183,8 @@
         <!--ironsource平台——end -->
 
         <!--max平台——start -->
-        <meta-data android:name="applovin.sdk.key"
-            android:value="95-ffs7CG-uU8Z3exG1oky-tAdQGD1z1kHK365gIQdSIH90WNUv2fTCPFMBhVmH9Fx0o1GhhAX7DQDrnACsVIv"/>
+<!--        <meta-data android:name="applovin.sdk.key"-->
+<!--            android:value="95-ffs7CG-uU8Z3exG1oky-tAdQGD1z1kHK365gIQdSIH90WNUv2fTCPFMBhVmH9Fx0o1GhhAX7DQDrnACsVIv"/>-->
         <!--max平台——end -->
 
     </application>
