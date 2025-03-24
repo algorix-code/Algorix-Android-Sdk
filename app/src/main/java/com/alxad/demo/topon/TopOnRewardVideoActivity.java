@@ -1,6 +1,5 @@
 package com.alxad.demo.topon;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.alxad.demo.AdConfig;
 import com.alxad.demo.R;
 import com.anythink.core.api.ATAdInfo;
-import com.anythink.core.api.ATNetworkConfirmInfo;
 import com.anythink.core.api.AdError;
 import com.anythink.rewardvideo.api.ATRewardVideoAd;
-import com.anythink.rewardvideo.api.ATRewardVideoExListener;
+import com.anythink.rewardvideo.api.ATRewardVideoListener;
 
 
 public class TopOnRewardVideoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -68,42 +66,7 @@ public class TopOnRewardVideoActivity extends AppCompatActivity implements View.
         startTime = System.currentTimeMillis();
 
         mVideoAD = new ATRewardVideoAd(this, AdConfig.TOPON_VIDEO_AD_PID);
-        mVideoAD.setAdListener(new ATRewardVideoExListener() {
-
-            @Override
-            public void onDeeplinkCallback(ATAdInfo adInfo, boolean isSuccess) {
-                Log.i(TAG, "onDeeplinkCallback:" + adInfo.toString() + "--status:" + isSuccess + ";" + getThreadName());
-            }
-
-            @Override
-            public void onDownloadConfirm(Context context, ATAdInfo atAdInfo, ATNetworkConfirmInfo atNetworkConfirmInfo) {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdAgainPlayStart(ATAdInfo atAdInfo) {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdAgainPlayEnd(ATAdInfo atAdInfo) {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdAgainPlayFailed(AdError adError, ATAdInfo atAdInfo) {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdAgainPlayClicked(ATAdInfo atAdInfo) {
-
-            }
-
-            @Override
-            public void onAgainReward(ATAdInfo atAdInfo) {
-
-            }
+        mVideoAD.setAdListener(new ATRewardVideoListener() {
 
             @Override
             public void onRewardedVideoAdLoaded() {

@@ -68,17 +68,17 @@ dependencies {
 
 
     //topon 平台
-    implementation "com.anythink.sdk:core:6.1.68"
-    implementation "com.anythink.sdk:nativead:6.1.68"
-    implementation "com.anythink.sdk:banner:6.1.68"
-    implementation "com.anythink.sdk:interstitial:6.1.68"
-    implementation "com.anythink.sdk:rewardedvideo:6.1.68"
-    implementation "com.anythink.sdk:splash:6.1.68"
+    implementation "com.anythink.sdk:core-tpn:6.4.39"
+    implementation "com.anythink.sdk:nativead-tpn:6.4.39"
+    implementation "com.anythink.sdk:banner-tpn:6.4.39"
+    implementation "com.anythink.sdk:interstitial-tpn:6.4.39"
+    implementation "com.anythink.sdk:rewardedvideo-tpn:6.4.39"
+    implementation "com.anythink.sdk:splash-tpn:6.4.39"
     //Androidx (Necessary)
 //    implementation "androidx.appcompat:appcompat:1.4.1"
-    implementation "androidx.browser:browser:1.0.0"
+    implementation "androidx.browser:browser:1.4.0"
     //如果Topon选择了admob,就需要添加
-    implementation "com.anythink.sdk:adapter-admob:6.1.68"
+    implementation "com.anythink.sdk:adapter-tpn-admob:6.4.39"
 //    implementation "com.google.android.gms:play-services-ads:23.5.0" //上面已经有
     // end
 

@@ -27,7 +27,7 @@ allprojects {
 
         //Anythink(Core)
         maven {
-            url "https://anythink.jfrog.io/artifactory/android_sdk"
+            url "https://jfrog.anythinktech.com/artifactory/overseas_sdk"
         }
 
         //Iron Source平台
