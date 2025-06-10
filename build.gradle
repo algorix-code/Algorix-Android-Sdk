@@ -14,6 +14,7 @@ buildscript {
 
         //max广告平台配置
         classpath "com.applovin.quality:AppLovinQualityServiceGradlePlugin:+"
+
     }
 }
 
