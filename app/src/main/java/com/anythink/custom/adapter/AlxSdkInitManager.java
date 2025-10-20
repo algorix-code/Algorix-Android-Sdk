@@ -8,9 +8,15 @@ import com.alxad.api.AlxSdkInitCallback;
 import com.anythink.core.api.ATInitMediation;
 import com.anythink.core.api.MediationInitCallback;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class AlxSdkInitManager extends ATInitMediation {
+
+    private static final String TAG = "AlxSdkInitManager";
 
     private volatile static AlxSdkInitManager sInstance;
     private boolean hasCallInit;
@@ -50,6 +56,10 @@ public class AlxSdkInitManager extends ATInitMediation {
 
                 }
             });
+
+            Map<String, Object> extraParameters = parseCustomExt(serviceExtras);
+            printExtraParameters(extraParameters);
+            setAlxExtraParameters(extraParameters);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -62,6 +72,66 @@ public class AlxSdkInitManager extends ATInitMediation {
             }
         }
 
+    }
+
+    private void setAlxExtraParameters(Map<String, Object> parameters) {
+        if (parameters != null && !parameters.isEmpty()) {
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                AlxAdSDK.addExtraParameters(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    private Map<String, Object> parseCustomExt(Map<String, Object> serverExtra) {
+        if (serverExtra == null || serverExtra.isEmpty()) {
+            return null;
+        }
+        try {
+            if (!serverExtra.containsKey("custom_ext")) {
+                return null;
+            }
+            String custom_ext = (String) serverExtra.get("custom_ext");
+            JSONObject json = new JSONObject(custom_ext);
+            if (json.has("extras")) {
+                JSONObject extras = json.optJSONObject("extras");
+                return getAlxExtraParameters(extras);
+            }
+            return null;
+        } catch (Exception e) {
+            Log.e(TAG, "parse custom_ext error:" + e.getMessage());
+        }
+        return null;
+    }
+
+    private Map<String, Object> getAlxExtraParameters(JSONObject extras) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (extras == null) {
+                return map;
+            }
+            Iterator<String> keys = extras.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                Object value = extras.get(key);
+                map.put(key, value);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "alx extras field error:" + e.getMessage());
+        }
+        return map;
+    }
+
+    private void printExtraParameters(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                Log.d(TAG, "alx Extra Parameters:null");
+                return;
+            }
+            JSONObject json = new JSONObject(map);
+            Log.d(TAG, "alx Extra Parameters:" + json.toString());
+        } catch (Exception e) {
+            Log.e(TAG, "printExtraParameters error:" + e.getMessage());
+        }
     }
 
 }

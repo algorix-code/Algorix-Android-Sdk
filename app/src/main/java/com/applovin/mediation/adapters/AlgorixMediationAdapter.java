@@ -46,9 +46,14 @@ import com.applovin.mediation.nativeAds.MaxNativeAd;
 import com.applovin.mediation.nativeAds.MaxNativeAdView;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
+import com.applovin.sdk.AppLovinSdkSettings;
 import com.applovin.sdk.AppLovinSdkUtils;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -58,7 +63,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AlgorixMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
     private static final String TAG = "AlgorixMediationAdapter";
-    private static final String ADAPTER_VERSION = "3.9.0";
+    private static final String ADAPTER_VERSION = "3.9.1";
 
     private static final int DEFAULT_IMAGE_TASK_TIMEOUT_SECONDS = 10;
 
@@ -586,6 +591,8 @@ public class AlgorixMediationAdapter extends MediationAdapterBase implements Max
             String sid = bundle.getString("sid");
             String token = bundle.getString("token");
             String debug = bundle.getString("isdebug");
+            Bundle extras = bundle.getBundle("extras");
+
             Boolean isDebug = null;
             if (debug != null) {
                 if (debug.equalsIgnoreCase("true")) {
@@ -618,6 +625,9 @@ public class AlgorixMediationAdapter extends MediationAdapterBase implements Max
                         }
                     }
                 });
+                Map<String, Object> extraParameters = getExtraParameters(extras, context);
+                printExtraParameters(extraParameters);
+                setAlxExtraParameters(extraParameters);
                 // // set GDPR
                 // // Subject to GDPR Flag: Please pass a Boolean value to indicate if the user is subject to GDPR regulations or not.
                 // // Your app should make its own determination as to whether GDPR is applicable to the user or not.
@@ -677,6 +687,74 @@ public class AlgorixMediationAdapter extends MediationAdapterBase implements Max
                 onCompletionListener.onCompletion(status, null);
             }
         }
+    }
+
+    private void setAlxExtraParameters(Map<String, Object> parameters) {
+        if (parameters != null && !parameters.isEmpty()) {
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                AlxAdSDK.addExtraParameters(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    private Map<String, Object> getExtraParameters(Bundle extras, Context context) {
+        Map<String, Object> map = null;
+        try {
+            map = getAlxExtraParameters(extras);
+            if (map == null || map.isEmpty()) {
+                map = getMaxExtraParameters(context);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "alx extras field error:" + e.getMessage());
+        }
+        return map;
+    }
+
+    private void printExtraParameters(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                Log.d(TAG, "alx Extra Parameters:null");
+                return;
+            }
+            JSONObject json = new JSONObject(map);
+            Log.d(TAG, "alx Extra Parameters:" + json.toString());
+        } catch (Exception e) {
+            Log.e(TAG, "printExtraParameters error:" + e.getMessage());
+        }
+    }
+
+    private Map<String, Object> getAlxExtraParameters(Bundle extras) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (extras == null) {
+                return map;
+            }
+            for (String key : extras.keySet()) {
+                try {
+                    Object obj = extras.get(key);
+                    map.put(key, obj);
+                } catch (Exception e1) {
+                    Log.e(TAG, "alx extras field " + key + " error:" + e1.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "alx extras field error:" + e.getMessage());
+        }
+        return map;
+    }
+
+    private Map<String, Object> getMaxExtraParameters(Context context) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            AppLovinSdkSettings settings = AppLovinSdk.getInstance(context).getSettings();
+            Map<String, String> values = settings.getExtraParameters();
+            if (values != null && !values.isEmpty()) {
+                map.putAll(values);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "max extras field error:" + e.getMessage());
+        }
+        return map;
     }
 
 }

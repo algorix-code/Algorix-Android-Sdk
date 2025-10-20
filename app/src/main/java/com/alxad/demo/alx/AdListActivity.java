@@ -38,25 +38,18 @@ public class AdListActivity extends AppCompatActivity implements View.OnClickLis
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_banner:
-                startActivity(new Intent(this, BannerActivity.class));
-                break;
-            case R.id.tv_banner_list_view:
-                startActivity(new Intent(this, BannerListViewActivity.class));
-                break;
-            case R.id.tv_banner_recycler_view:
-                startActivity(new Intent(this, BannerRecyclerViewActivity.class));
-                break;
-            case R.id.tv_video_ad:
-                startActivity(new Intent(this, RewardVideoActivity.class));
-                break;
-            case R.id.tv_interstitial_ad:
-                startActivity(new Intent(this, InterstitialActivity.class));
-                break;
-            case R.id.tv_native_ad:
-                startActivity(new Intent(this, NativeListActivity.class));
-                break;
+        if(v.getId() == R.id.tv_banner){
+            startActivity(new Intent(this, BannerActivity.class));
+        }else if(v.getId() == R.id.tv_banner_list_view){
+            startActivity(new Intent(this, BannerListViewActivity.class));
+        }else if(v.getId() == R.id.tv_banner_recycler_view){
+            startActivity(new Intent(this, BannerRecyclerViewActivity.class));
+        }else if(v.getId() == R.id.tv_video_ad){
+            startActivity(new Intent(this, RewardVideoActivity.class));
+        }else if(v.getId() == R.id.tv_interstitial_ad){
+            startActivity(new Intent(this, InterstitialActivity.class));
+        }else if(v.getId() == R.id.tv_native_ad){
+            startActivity(new Intent(this, NativeListActivity.class));
         }
     }
 }

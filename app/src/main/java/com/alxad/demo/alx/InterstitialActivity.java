@@ -42,21 +42,18 @@ public class InterstitialActivity extends AppCompatActivity implements View.OnCl
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_load:
+        if (v.getId() == R.id.tv_load){
+            loadAd();
+        }else if (v.getId() == R.id.tv_show){
+            if (mInterstitialAD == null) {
+                Toast.makeText(this, getString(R.string.show_ad_no_load), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (mInterstitialAD.isReady()) {
+                mInterstitialAD.show(this);
+            } else {
                 loadAd();
-                break;
-            case R.id.tv_show:
-                if (mInterstitialAD == null) {
-                    Toast.makeText(this, getString(R.string.show_ad_no_load), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (mInterstitialAD.isReady()) {
-                    mInterstitialAD.show(this);
-                } else {
-                    loadAd();
-                }
-                break;
+            }
         }
     }
 

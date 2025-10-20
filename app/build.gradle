@@ -1,16 +1,17 @@
-apply plugin: 'com.android.application'
-apply plugin: 'applovin-quality-service'
-applovin {
-    apiKey "lLGhani26T8gm4OkVld8fUNfABdnc_tZ6b1P7O4JmvqdeN-PNlbZDyl87-QuDt26AESqtxHyLwuwAdLS7fbSpx"
+plugins {
+    alias(libs.plugins.android.application)
 }
 
 android {
-    compileSdk 34
+    namespace 'com.alxad.demo'
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId "com.alxad.demo"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 36
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -35,33 +36,28 @@ android {
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.config
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-repositories {
-    flatDir {
-        dirs 'libs'
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation libs.multidex
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.core.ktx
+
+    implementation 'com.github.bumptech.glide:glide:5.0.5'
 
     //alx ad
-    implementation (name:"alx.3.9.0",ext:"aar")
+    implementation 'io.github.algorixco:ads-sdk:3.9.1'
+//    implementation (name:"alx.3.9.1",ext:"aar")
 
     //admob 平台
     implementation "com.google.android.gms:play-services-ads:23.5.0"
@@ -77,14 +73,12 @@ dependencies {
     //Androidx (Necessary)
 //    implementation "androidx.appcompat:appcompat:1.4.1"
     implementation "androidx.browser:browser:1.4.0"
-    //如果Topon选择了admob,就需要添加
-    implementation "com.anythink.sdk:adapter-tpn-admob:6.4.39"
 //    implementation "com.google.android.gms:play-services-ads:23.5.0" //上面已经有
     // end
 
 
     //max 平台
-    implementation "com.applovin:applovin-sdk:13.0.0"
+    implementation "com.applovin:applovin-sdk:13.3.1"
 
 
     //IronSource平台
@@ -97,7 +91,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 //    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation "com.tradplusad:tradplus:9.4.0.1"
+    implementation "com.tradplusad:tradplus:14.5.0.1"
     //end
 
 

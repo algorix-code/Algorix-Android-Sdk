@@ -41,25 +41,19 @@ public class NativeListActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn:
-                bnShow();
-                break;
+        if (v.getId() == R.id.btn) {
+            bnShow();
         }
     }
 
     private void bnShow() {
         int showType = 0;
-        switch (mRadioList.getCheckedRadioButtonId()) {
-            case R.id.render_listview:
-                showType = 0;
-                break;
-            case R.id.render_recyclerview:
-                showType = 1;
-                break;
-            case R.id.render_other:
-                showType = 2;
-                break;
+        if (mRadioList.getCheckedRadioButtonId() == R.id.render_listview) {
+            showType = 0;
+        }else if (mRadioList.getCheckedRadioButtonId() == R.id.render_recyclerview){
+            showType = 1;
+        }else if (mRadioList.getCheckedRadioButtonId() == R.id.render_other) {
+            showType = 2;
         }
 
         Intent intent;

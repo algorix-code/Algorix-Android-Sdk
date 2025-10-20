@@ -60,16 +60,12 @@ public class BannerActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bn_load:
-                bnPreLoad();
-                break;
-            case R.id.bn_show:
-                bnShow();
-                break;
-            case R.id.bn_load_show:
-                bnLoadAndShow();
-                break;
+        if (v.getId() == R.id.bn_load) {
+            bnPreLoad();
+        }else if (v.getId() == R.id.bn_show) {
+            bnShow();
+        }else if (v.getId() == R.id.bn_load_show) {
+            bnLoadAndShow();
         }
     }
 

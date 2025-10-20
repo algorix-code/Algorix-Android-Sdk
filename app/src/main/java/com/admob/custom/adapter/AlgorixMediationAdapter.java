@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,8 +55,11 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Admob ads AlgoriX Adapter (四合一。include: banner、native、interstitial、reward)
@@ -63,15 +67,17 @@ import java.util.Map;
 public class AlgorixMediationAdapter extends Adapter implements MediationBannerAd, MediationInterstitialAd, MediationRewardedAd {
     private static final String TAG = "AlgorixMediationAdapter";
 
-    private static final String ADAPTER_VERSION = "3.9.0";
-
     private static final String ALX_AD_UNIT_KEY = "parameter";
+
+    private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
 
     private String unitid = "";
     private String appid = "";
     private String sid = "";
     private String token = "";
     private Boolean isDebug = null;
+
+    private JSONObject extras = null;
 
     //banner
     private MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> mBannerLoadCallback;
@@ -103,19 +109,45 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
                     "Initialization Failed: Context is null.");
             return;
         }
-        initializationCompleteCallback.onInitializationSucceeded();
+        if(isInitialized.get()){
+            initializationCompleteCallback.onInitializationSucceeded();
+            return;
+        }
+        for (MediationConfiguration configuration : list) {
+            Bundle serverParameters = configuration.getServerParameters();
+            String serviceString = serverParameters.getString(ALX_AD_UNIT_KEY);
+            if (!TextUtils.isEmpty(serviceString)) {
+                parseServer(serviceString);
+                if(!TextUtils.isEmpty(appid) && !TextUtils.isEmpty(sid) && !TextUtils.isEmpty(token)){
+                    break;
+                }
+            }
+        }
+        initSdk(context, new SDKCallback() {
+            @Override
+            public void onSuccess() {
+                isInitialized.set(true);
+                initializationCompleteCallback.onInitializationSucceeded();
+            }
+
+            @Override
+            public void onFail(String message) {
+                isInitialized.set(false);
+                initializationCompleteCallback.onInitializationFailed(message);
+            }
+        });
     }
 
     @Override
     public void loadBannerAd(@NonNull MediationBannerAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
-        Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
         Log.d(TAG, "alx-admob-adapter: loadBannerAd");
         mBannerLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
             parseServer(parameter);
         }
-        initSdk(configuration.getContext(), callback, 1);
+        startLoad(configuration.getContext(), callback, 1);
     }
 
     //banner ad
@@ -127,38 +159,38 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
 
     @Override
     public void loadNativeAdMapper(@NonNull MediationNativeAdConfiguration configuration, @NonNull MediationAdLoadCallback<NativeAdMapper, MediationNativeAdCallback> callback) throws RemoteException {
-        Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
         Log.d(TAG, "alx-admob-adapter: loadNativeAd");
         mNativeLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
             parseServer(parameter);
         }
-        initSdk(configuration.getContext(), callback, 2);
+        startLoad(configuration.getContext(), callback, 2);
     }
 
     @Override
     public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
-        Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
         Log.d(TAG, "alx-admob-adapter: loadInterstitialAd");
         mInterstitialLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
             parseServer(parameter);
         }
-        initSdk(configuration.getContext(), callback, 3);
+        startLoad(configuration.getContext(), callback, 3);
     }
 
     @Override
     public void loadRewardedAd(@NonNull MediationRewardedAdConfiguration configuration, @NonNull MediationAdLoadCallback<MediationRewardedAd, MediationRewardedAdCallback> callback) {
-        Log.d(TAG, "alx-admob-adapter-version:" + ADAPTER_VERSION);
+        Log.d(TAG, "alx-admob-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
         Log.d(TAG, "alx-admob-adapter: loadRewardedAd");
         mRewardLoadCallback = callback;
         String parameter = configuration.getServerParameters().getString(ALX_AD_UNIT_KEY);
         if (!TextUtils.isEmpty(parameter)) {
             parseServer(parameter);
         }
-        initSdk(configuration.getContext(), callback, 4);
+        startLoad(configuration.getContext(), callback, 4);
     }
 
     //interstitial、reward 共用
@@ -195,65 +227,43 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
         }
     }
 
-    private void initSdk(final Context context, final MediationAdLoadCallback callback, final int type) {
+    private void startLoad(final Context context, final MediationAdLoadCallback callback, final int type) {
         if (TextUtils.isEmpty(unitid)) {
             Log.d(TAG, "alx unitid is empty");
             loadError(callback, 1, "alx unitid is empty.");
             return;
         }
-        if (TextUtils.isEmpty(sid)) {
-            Log.d(TAG, "alx sid is empty");
-            loadError(callback, 1, "alx sid is empty.");
-            return;
-        }
-        if (TextUtils.isEmpty(appid)) {
-            Log.d(TAG, "alx appid is empty");
-            loadError(callback, 1, "alx appid is empty.");
-            return;
-        }
-        if (TextUtils.isEmpty(token)) {
-            Log.d(TAG, "alx token is empty");
-            loadError(callback, 1, "alx token is empty");
-            return;
-        }
-
-        try {
-            Log.i(TAG, "alx token: " + token + " alx appid: " + appid + "alx sid: " + sid);
-            // init
-            if (isDebug != null) {
-                AlxAdSDK.setDebug(isDebug.booleanValue());
-            }
-            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
+        if(isInitialized.get()){
+            sendRequest(context,type);
+        }else{
+            initSdk(context, new SDKCallback() {
                 @Override
-                public void onInit(boolean isOk, String msg) {
-                    switch (type) {
-                        case 1:
-                            requestBannerAd(context);
-                            break;
-                        case 2:
-                            requestNativeAd(context);
-                            break;
-                        case 3:
-                            requestInterstitialAd(context);
-                            break;
-                        case 4:
-                            requestRewardAd(context);
-                            break;
-                    }
+                public void onSuccess() {
+                    sendRequest(context, type);
+                }
+
+                @Override
+                public void onFail(String message) {
+                    loadError(callback, 1, message);
                 }
             });
-//            // set GDPR
-//            AlxAdSDK.setSubjectToGDPR(true);
-//            // set GDPR Consent
-//            AlxAdSDK.setUserConsent("1");
-//            // set COPPA
-//            AlxAdSDK.setBelowConsentAge(true);
-//            // set CCPA
-//            AlxAdSDK.subjectToUSPrivacy("1YYY");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-            loadError(callback, 1, "alx sdk init error");
+        }
+    }
+
+    private void sendRequest(Context context,int type){
+        switch (type) {
+            case 1:
+                requestBannerAd(context);
+                break;
+            case 2:
+                requestNativeAd(context);
+                break;
+            case 3:
+                requestInterstitialAd(context);
+                break;
+            case 4:
+                requestRewardAd(context);
+                break;
         }
     }
 
@@ -485,6 +495,7 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
             token = json.getString("token");
             unitid = json.getString("unitid");
             String debug = json.optString("isdebug");
+            extras = json.optJSONObject("extras");
             if(debug != null){
                 if(debug.equalsIgnoreCase("true")){
                     isDebug = Boolean.TRUE;
@@ -695,6 +706,97 @@ public class AlgorixMediationAdapter extends Adapter implements MediationBannerA
                 return null;
             }
         }
+    }
+
+    private void setAlxExtraParameters(Map<String, Object> parameters) {
+        if (parameters != null && !parameters.isEmpty()) {
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                AlxAdSDK.addExtraParameters(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    private Map<String, Object> getAlxExtraParameters(JSONObject extras) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if (extras == null) {
+                return map;
+            }
+            Iterator<String> keys = extras.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                Object value = extras.get(key);
+                map.put(key, value);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "alx extras field error:" + e.getMessage());
+        }
+        return map;
+    }
+
+    private void printExtraParameters(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty()) {
+                Log.d(TAG, "alx Extra Parameters:null");
+                return;
+            }
+            JSONObject json = new JSONObject(map);
+            Log.d(TAG, "alx Extra Parameters:" + json.toString());
+        } catch (Exception e) {
+            Log.e(TAG, "printExtraParameters error:" + e.getMessage());
+        }
+    }
+
+    private void initSdk(Context context,final SDKCallback callback){
+        if (TextUtils.isEmpty(sid)) {
+            Log.d(TAG, "alx sid is empty");
+            callback.onFail("alx sid is empty.");
+            return;
+        }
+        if (TextUtils.isEmpty(appid)) {
+            Log.d(TAG, "alx appid is empty");
+            callback.onFail("alx appid is empty.");
+            return;
+        }
+        if (TextUtils.isEmpty(token)) {
+            Log.d(TAG, "alx token is empty");
+            callback.onFail("alx token is empty");
+            return;
+        }
+
+        try {
+            Log.i(TAG, "alx token: " + token + " alx appid: " + appid + "alx sid: " + sid);
+            // init
+            if (isDebug != null) {
+                AlxAdSDK.setDebug(isDebug.booleanValue());
+            }
+            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
+                @Override
+                public void onInit(boolean isOk, String msg) {
+                    callback.onSuccess();
+                }
+            });
+            Map<String, Object> extraParameters = getAlxExtraParameters(extras);
+            printExtraParameters(extraParameters);
+            setAlxExtraParameters(extraParameters);
+//            // set GDPR
+//            AlxAdSDK.setSubjectToGDPR(true);
+//            // set GDPR Consent
+//            AlxAdSDK.setUserConsent("1");
+//            // set COPPA
+//            AlxAdSDK.setBelowConsentAge(true);
+//            // set CCPA
+//            AlxAdSDK.subjectToUSPrivacy("1YYY");
+        } catch (Exception e) {
+            Log.e(TAG, "error:"+e.getMessage());
+            callback.onFail("alx sdk init error");
+        }
+    }
+
+    private interface SDKCallback {
+        void onSuccess();
+
+        void onFail(String message);
     }
 
 }
