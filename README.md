@@ -1,48 +1,35 @@
-<h2>Import SDK</h2>
-dependent jar packages Copy the alx....aar in the SDKcompressed package to the Application Module/libs folder (if not, you must create it manually), and add the following code to the build.gradle of your Moudle app: //The project Application name exported by Unity is generally unityLibrary 
+# Algorix Android SDK
 
-     repositories {     
-          flatDir {
-               dirs'libs'
-          }      
-     }
+**Welcome to the Algorix Android SDK**, your gateway to unlocking the full potential of in-app monetization.
 
+This `Algorix-Android-SDK` repository contains:
 
-     depedencies {
-        implementation (name:'alx.*.*.*', ext:'aar') //Change to the specific version number by yourself
+1. Example source code for using Algorix
+2. Open source mediation adapters
 
-     }
+# Examples Demo App
+The Java Demo App is sample projects demonstrating how to mediate ads using
+Algorix SDK. To get started with the demo apps, follow the instructions below:
 
-<h2>Permissions</h2>
+1.Open your desired project in Android Studio: Algorix Demo App - Java.
 
-Alx SDK recommends that you add the following permissions, and it is recommended to declare to the developer in your privacy agreement that Alx SDK will obtain the following permissions and apply them to advertising.
+2.Verify that the dependency
 
-     
-    <!--必要权限-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!—可选权限-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--可选权限：安卓11及以上，按照实际情况可选择添加此权限-->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-    <!-- 播放器应用需要防止屏幕变暗 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    dependencies {
 
+    
+    //Algorix Android SDK (Necessary)
+    
+    api 'io.github.algorixco:ads-sdk:3.9.1'
+    
+    }
 
-<h2>Environment</h2>
+is included in your build.gradle (Module: app).
 
-Operating environment configuration This SDK can run on Android4.1 (API Level 16) and above. If the developer declares that the targetSdkVersion is above API 23, please ensure that you have applied for all the permissions required by the SDK before calling any interface of this SDK, otherwise some features of the SDK may be restricted.
+3.Change the package with your own unique identifier in your build.gradle (Module: app).
+Base your unique identifier on the name of the application you will create or that you
+have already created in the Algorix dashboard.
 
-<h2>Code obfuscation</h2>
-
-Code obfuscation settings Add the following to the .pro file in the App folder (usually called proguard-rules.pro in Android, and proguard-unity.txt exported by Unity):
-
-     -keep class com.alxad.api.** {*;}
-
-<h2>Support</h2>
-
-Alx sdk supports banner and Reward Viedo Adapt to Admob Mopub Topon. More information see the code in the demo
-
-
+4.Update the unique Algorix ad unit ID value within the activity code for each ad format.
+Each ad format corresponds to a unique Algorix ad unit ID you create in the Algorix
+dashboard for the package used before.
