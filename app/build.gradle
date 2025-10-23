@@ -57,7 +57,7 @@ dependencies {
 
     //alx ad
     implementation 'io.github.algorixco:ads-sdk:3.9.1'
-//    implementation (name:"alx.3.9.1",ext:"aar")
+//    implementation files('libs/alx.3.9.1.aar')
 
     //admob 平台
     implementation "com.google.android.gms:play-services-ads:23.5.0"
