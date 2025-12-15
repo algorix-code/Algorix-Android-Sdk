@@ -13,7 +13,6 @@ import com.alxad.api.AlxBannerViewAdListener;
 import com.alxad.api.AlxSdkInitCallback;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.VersionInfo;
 import com.google.android.gms.ads.mediation.Adapter;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
@@ -21,6 +20,7 @@ import com.google.android.gms.ads.mediation.MediationBannerAd;
 import com.google.android.gms.ads.mediation.MediationBannerAdCallback;
 import com.google.android.gms.ads.mediation.MediationBannerAdConfiguration;
 import com.google.android.gms.ads.mediation.MediationConfiguration;
+import com.google.android.gms.ads.VersionInfo;
 
 import org.json.JSONObject;
 
