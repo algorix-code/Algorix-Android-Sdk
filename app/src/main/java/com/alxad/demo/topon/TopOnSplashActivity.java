@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.MainActivity;
 import com.alxad.demo.R;
 import com.anythink.core.api.ATAdInfo;
@@ -17,7 +16,7 @@ import com.anythink.splashad.api.ATSplashAdExtraInfo;
 import com.anythink.splashad.api.ATSplashAdListener;
 
 
-public class TopOnSplashActivity extends AppCompatActivity {
+public class TopOnSplashActivity extends BaseActivity {
     private static final String TAG = "TopOnSplashDemoActivity";
 
     private ATSplashAd mAD;

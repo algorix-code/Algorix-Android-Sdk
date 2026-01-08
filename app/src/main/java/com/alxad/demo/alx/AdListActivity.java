@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
-public class AdListActivity extends AppCompatActivity implements View.OnClickListener {
+public class AdListActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,17 +6,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.tradplus.ads.base.bean.TPAdError;
 import com.tradplus.ads.base.bean.TPAdInfo;
 import com.tradplus.ads.open.reward.RewardAdListener;
 import com.tradplus.ads.open.reward.TPReward;
 
-public class TradPlusRewardVideoActivity extends AppCompatActivity implements View.OnClickListener {
+public class TradPlusRewardVideoActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "TradPlusRewardVideoDemo";
 
     private TextView mTvTip;

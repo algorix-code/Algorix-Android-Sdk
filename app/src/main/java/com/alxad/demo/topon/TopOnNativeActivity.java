@@ -12,9 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.anythink.core.api.ATAdInfo;
 import com.anythink.core.api.AdError;
@@ -36,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TopOnNativeActivity extends AppCompatActivity implements View.OnClickListener {
+public class TopOnNativeActivity extends BaseActivity implements View.OnClickListener {
 
     private final static String TAG = TopOnNativeActivity.class.getSimpleName();
 

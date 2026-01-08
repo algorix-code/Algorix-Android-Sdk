@@ -15,8 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.api.AlxAdParam;
 import com.alxad.api.nativead.AlxMediaContent;
 import com.alxad.api.nativead.AlxMediaView;
@@ -27,6 +25,7 @@ import com.alxad.api.nativead.AlxNativeAdView;
 import com.alxad.api.nativead.AlxNativeEventListener;
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.bumptech.glide.Glide;
 
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * native Ad—— Display in ListView
  */
-public class NativeListViewActivity extends AppCompatActivity {
+public class NativeListViewActivity extends BaseActivity {
     private final String TAG = "AlxNativeListDemo";
 
     private MyAdapter mAdapter;

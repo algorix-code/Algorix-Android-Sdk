@@ -7,15 +7,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.alxad.api.AlxInterstitialAD;
 import com.alxad.api.AlxInterstitialADListener;
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
-public class InterstitialActivity extends AppCompatActivity implements View.OnClickListener {
+public class InterstitialActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "AlxInterstitialDemo";
 
     private TextView mTvTip;

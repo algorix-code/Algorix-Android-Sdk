@@ -7,9 +7,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxError;
@@ -20,7 +20,7 @@ import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder;
 
 
 
-public class MaxNativeActivity extends AppCompatActivity implements View.OnClickListener {
+public class MaxNativeActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "MaxNativeActivity";
 
     private TextView mTvLoad;

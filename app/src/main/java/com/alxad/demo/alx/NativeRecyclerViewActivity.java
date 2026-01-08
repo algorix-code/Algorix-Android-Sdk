@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +28,7 @@ import com.alxad.api.nativead.AlxNativeAdView;
 import com.alxad.api.nativead.AlxNativeEventListener;
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.bumptech.glide.Glide;
 
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * native Ad—— Display in RecyclerView
  */
-public class NativeRecyclerViewActivity extends AppCompatActivity {
+public class NativeRecyclerViewActivity extends BaseActivity {
     private final String TAG = "AlxNativeRecyclerDemo";
 
     private MyAdapter mAdapter;

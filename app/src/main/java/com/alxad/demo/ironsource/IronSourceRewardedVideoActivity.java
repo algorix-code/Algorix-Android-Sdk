@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
@@ -17,7 +16,7 @@ import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.LevelPlayRewardedVideoListener;
 
-public class IronSourceRewardedVideoActivity extends AppCompatActivity implements View.OnClickListener {
+public class IronSourceRewardedVideoActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = "IronSourceRewardedVideo";
     private TextView mTvTip;

@@ -7,9 +7,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -19,7 +19,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 
-public class AdmobInterstitialActivity extends AppCompatActivity implements View.OnClickListener {
+public class AdmobInterstitialActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "AdmobInterstitial";
     private InterstitialAd mAd;
     private TextView mTvTip;

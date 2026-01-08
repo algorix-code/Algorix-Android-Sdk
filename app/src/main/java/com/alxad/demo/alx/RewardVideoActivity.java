@@ -7,15 +7,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.api.AlxRewardVideoAD;
 import com.alxad.api.AlxRewardVideoADListener;
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
-public class RewardVideoActivity extends AppCompatActivity implements View.OnClickListener {
+public class RewardVideoActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "AlxRewardVideoDemo";
 
     private TextView mTvTip;

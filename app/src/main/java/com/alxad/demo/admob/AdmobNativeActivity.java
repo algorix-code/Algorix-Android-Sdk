@@ -10,9 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
@@ -26,7 +26,7 @@ import com.google.android.gms.ads.nativead.NativeAdView;
 
 
 
-public class AdmobNativeActivity extends AppCompatActivity implements View.OnClickListener {
+public class AdmobNativeActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "AdmobNativeActivity";
 
     private FrameLayout mAdContainerView;

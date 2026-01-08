@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alxad.api.AlxBannerView;
 import com.alxad.api.AlxBannerViewAdListener;
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * banner广告——在RecyclerView中显示
  */
-public class BannerRecyclerViewActivity extends AppCompatActivity {
+public class BannerRecyclerViewActivity extends BaseActivity {
     private final String TAG = "AlxBannerRecyclerDemo";
 
     private MyAdapter mAdapter;

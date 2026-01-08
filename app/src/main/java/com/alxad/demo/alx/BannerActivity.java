@@ -8,15 +8,15 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.alxad.api.AlxBannerView;
 import com.alxad.api.AlxBannerViewAdListener;
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
-public class BannerActivity extends AppCompatActivity implements View.OnClickListener {
+public class BannerActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "AlxBannerDemoActivity";
 
     private Button mBnLoad;

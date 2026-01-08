@@ -6,8 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
@@ -15,7 +14,7 @@ import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.sdk.LevelPlayInterstitialListener;
 
-public class IronSourceInterstitialActivity extends AppCompatActivity implements View.OnClickListener {
+public class IronSourceInterstitialActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = "IronSourceInterstitial";
     private TextView mTvTip;

@@ -10,9 +10,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdViewAdListener;
@@ -20,7 +20,7 @@ import com.applovin.mediation.MaxError;
 import com.applovin.mediation.ads.MaxAdView;
 
 
-public class MaxBannerActivity extends AppCompatActivity implements View.OnClickListener{
+public class MaxBannerActivity extends BaseActivity implements View.OnClickListener{
     private final String TAG = "MaxBannerActivity";
 
     private FrameLayout mAdContainerView;

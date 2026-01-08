@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.MainActivity;
 import com.alxad.demo.R;
 import com.tradplus.ads.base.bean.TPAdError;
@@ -17,7 +15,7 @@ import com.tradplus.ads.base.bean.TPBaseAd;
 import com.tradplus.ads.open.splash.SplashAdListener;
 import com.tradplus.ads.open.splash.TPSplash;
 
-public class TradPlusSplashActivity extends AppCompatActivity {
+public class TradPlusSplashActivity extends BaseActivity {
     private static final String TAG = "TradPlusSplashDemo";
 
     private TPSplash mAD;

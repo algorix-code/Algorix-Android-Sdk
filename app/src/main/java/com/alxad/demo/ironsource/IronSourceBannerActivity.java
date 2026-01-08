@@ -8,9 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 
-
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.ironsource.mediationsdk.ISBannerSize;
 import com.ironsource.mediationsdk.IronSource;
@@ -20,7 +19,7 @@ import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.sdk.LevelPlayBannerListener;
 
-public class IronSourceBannerActivity extends AppCompatActivity implements View.OnClickListener {
+public class IronSourceBannerActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "IronSourceBanner";
 
     private FrameLayout mAdContainerView;

@@ -8,15 +8,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.api.AlxSplashAd;
 import com.alxad.api.AlxSplashAdListener;
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.MainActivity;
 import com.alxad.demo.R;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     private final String TAG = "AlxSplashDemo";
     private final int AD_TIMEOUT = 5 * 1000;//开屏广告加载的超时时间5s
 

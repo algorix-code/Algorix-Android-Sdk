@@ -8,9 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.anythink.banner.api.ATBannerListener;
 import com.anythink.banner.api.ATBannerView;
@@ -18,7 +17,7 @@ import com.anythink.core.api.ATAdInfo;
 import com.anythink.core.api.AdError;
 
 
-public class TopOnBannerActivity extends AppCompatActivity implements View.OnClickListener {
+public class TopOnBannerActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "TopOnBannerDemoActivity";
 
     private FrameLayout mAdContainerView;

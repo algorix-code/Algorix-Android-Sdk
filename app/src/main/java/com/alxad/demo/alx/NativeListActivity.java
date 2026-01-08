@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
 /**
  * native Ad
  */
-public class NativeListActivity extends AppCompatActivity implements View.OnClickListener {
+public class NativeListActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "AlxNativeDemoActivity";
 
     //AlxNativeAd.getCreativeType() 得到的广告素材类型【如：大图、小图、组图、视频、其他：未知类型】

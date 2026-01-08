@@ -15,11 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.api.AlxBannerView;
 import com.alxad.api.AlxBannerViewAdListener;
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 
 
@@ -30,7 +29,7 @@ import java.util.List;
 /**
  * banner广告——在ListView 中显示
  */
-public class BannerListViewActivity extends AppCompatActivity {
+public class BannerListViewActivity extends BaseActivity {
     private final String TAG = "AlxBannerListDemo";
 
     private MyAdapter mAdapter;

@@ -6,9 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdListener;
@@ -16,7 +15,7 @@ import com.applovin.mediation.MaxError;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 
 
-public class MaxInterstitialActivity extends AppCompatActivity implements View.OnClickListener {
+public class MaxInterstitialActivity extends BaseActivity implements View.OnClickListener {
     private static String TAG = "MaxInterstitialActivity";
 
     private TextView mTvTip;

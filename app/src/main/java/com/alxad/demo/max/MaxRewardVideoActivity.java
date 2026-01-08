@@ -6,9 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxError;
@@ -17,7 +16,7 @@ import com.applovin.mediation.MaxRewardedAdListener;
 import com.applovin.mediation.ads.MaxRewardedAd;
 
 
-public class MaxRewardVideoActivity extends AppCompatActivity implements View.OnClickListener {
+public class MaxRewardVideoActivity extends BaseActivity implements View.OnClickListener {
     private static String TAG = "MaxRewardVideoActivity";
 
     private TextView mTvTip;

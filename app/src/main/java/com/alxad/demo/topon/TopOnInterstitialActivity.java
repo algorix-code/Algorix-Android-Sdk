@@ -6,9 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.alxad.demo.AdConfig;
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.anythink.core.api.ATAdInfo;
 import com.anythink.core.api.AdError;
@@ -16,7 +15,7 @@ import com.anythink.interstitial.api.ATInterstitial;
 import com.anythink.interstitial.api.ATInterstitialListener;
 
 
-public class TopOnInterstitialActivity extends AppCompatActivity implements View.OnClickListener {
+public class TopOnInterstitialActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "TopOnInterstitialDemo";
     private TextView mTvTip;

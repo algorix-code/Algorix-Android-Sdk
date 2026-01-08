@@ -5,8 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.alxad.demo.BaseActivity;
 import com.alxad.demo.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -14,7 +14,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 
 
-public class AdmobBannerActivity extends AppCompatActivity {
+public class AdmobBannerActivity extends BaseActivity {
     private final String TAG = "AdmobBannerActivity";
 
     private AdView mAdView;
