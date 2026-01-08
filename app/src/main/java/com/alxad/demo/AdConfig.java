@@ -10,7 +10,7 @@ public class AdConfig {
     public static String ALX_NATIVE_AD_PID = "172943";//native AD id
     public static String ALX_REWARD_VIDEO_AD_PID = "172750";//reward video AD id
     public static String ALX_INTERSTITIAL_AD_PID = "172748";//interstitial AD id
-    public static String ALX_SPLASH_AD_PID = "172140";//splash AD id
+    public static String ALX_SPLASH_AD_ID = "172140";//splash AD id
 
 
     //topon 平台广告配置信息
