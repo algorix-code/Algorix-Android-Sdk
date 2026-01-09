@@ -2,7 +2,6 @@ package com.alxad.demo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.List;
 
 public abstract class BaseListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -22,14 +19,6 @@ public abstract class BaseListActivity extends BaseActivity implements AdapterVi
 
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().getDecorView().setSystemUiVisibility(
-//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-//                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//            );
-//        }
-
         ListView listView = new ListView(this);
         listView.setFitsSystemWindows(true);
         listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
