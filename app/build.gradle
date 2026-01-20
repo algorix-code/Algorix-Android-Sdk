@@ -62,7 +62,6 @@ dependencies {
     //admob 平台
     implementation "com.google.android.gms:play-services-ads:23.5.0"
 
-
     //topon 平台
     implementation "com.anythink.sdk:core-tpn:6.4.39"
     implementation "com.anythink.sdk:nativead-tpn:6.4.39"
