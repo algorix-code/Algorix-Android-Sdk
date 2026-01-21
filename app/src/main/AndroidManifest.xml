@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.alxad.demo">
+    package="com.alxad.sdk.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -36,39 +36,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
-
+        <activity android:name=".MainActivity"
+            android:launchMode="singleInstance"/>
 
         <!-- Alx demo案例-->
-        <activity android:name=".alx.AdListActivity" />
+        <activity android:name=".alx.AlxDemoListActivity" />
         <activity android:name=".alx.BannerActivity"
             android:label="Alx Ad: banner"/>
-        <activity
-            android:name=".alx.BannerListViewActivity"
-            android:label="Alx Ad: ListView banner show" />
-        <activity
-            android:name=".alx.BannerRecyclerViewActivity"
-            android:label="Alx Ad: RecyclerView banner show" />
         <activity android:name=".alx.RewardVideoActivity"
             android:label="Alx Ad: reward video"/>
-        <activity android:name=".alx.InterstitialActivity"
-            android:label="Alx Ad: interstitial"/>
+        <activity android:name=".alx.InterstitialVideoActivity"
+            android:label="Alx Ad: interstitial Ad - video"/>
+        <activity android:name=".alx.InterstitialBannerActivity"
+            android:label="Alx Ad: interstitial Ad - banner"/>
+        <activity
+            android:name=".alx.NativeActivity"
+            android:label="Alx Ad: native" />
 
-        <activity android:name=".alx.NativeListActivity"
-            android:label="Alx Ad: native"/>
-        <activity
-            android:name=".alx.NativeListViewActivity"
-            android:label="Alx Ad: ListView native show" />
-        <activity
-            android:name=".alx.NativeRecyclerViewActivity"
-            android:label="Alx Ad: RecyclerView native show" />
-        <activity
-            android:name=".alx.NativeNormalActivity"
-            android:label="Alx Ad: Normal native show" />
 
         <!-- TopOn平台 demo案例 -->
         <activity
-            android:name=".topon.TopOnAdDemoListActivity"
+            android:name=".topon.TopOnDemoListActivity"
             android:label="TopOn Ad" />
         <activity android:name=".topon.TopOnBannerActivity"
             android:label="TopOn Ad: banner"/>
@@ -116,13 +104,14 @@
         <!-- IronSource平台 demo案例 -->
         <activity
             android:name=".ironsource.IronSourceDemoListActivity"
-            android:label="Ironsource Ad"></activity>
+            android:label="Ironsource Ad"/>
         <activity android:name=".ironsource.IronSourceInterstitialActivity"
             android:label="Ironsource Ad: interstitial"/>
         <activity android:name=".ironsource.IronSourceRewardedVideoActivity"
             android:label="Ironsource Ad: reward video"/>
         <activity android:name=".ironsource.IronSourceBannerActivity"
             android:label="Ironsource Ad: banner"/>
+
 
         <!-- max平台 demo案例 -->
         <activity
@@ -140,6 +129,20 @@
         <activity
             android:name=".max.MaxNativeActivity"
             android:label="max Ad:native" />
+
+
+        <!-- GAM平台 demo案例 -->
+        <activity
+            android:name=".gam.GamDemoListActivity"
+            android:label="Gam Ad" />
+        <activity android:name=".gam.GamBannerActivity"
+            android:label="Gam Ad: banner"/>
+        <activity android:name=".gam.GamRewardVideoActivity"
+            android:label="Gam Ad: reward video"/>
+        <activity android:name=".gam.GamInterstitialActivity"
+            android:label="Gam Ad: interstitial"/>
+        <activity android:name=".gam.GamNativeActivity"
+            android:label="Gam Ad: native"/>
 
 
 

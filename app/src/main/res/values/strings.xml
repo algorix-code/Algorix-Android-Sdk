@@ -2,9 +2,14 @@
     <string name="app_name">AlgoriX SDK Demo</string>
     <string name="ads_tag">AD</string>
 
+    <string name="admob_banner_id">ca-app-pub-4920936244266233/6225547012</string>
+    <string name="gam_banner_id">ca-app-pub-4885562717451614/9675235882</string>
+
     <string name="banner_ad">banner Ad</string>
     <string name="reward_ad">reward Ad</string>
     <string name="interstitial_ad">interstitial Ad</string>
+    <string name="interstitial_video_ad">interstitial Ad - video</string>
+    <string name="interstitial_banner_ad">interstitial Ad - banner</string>
     <string name="native_ad">native Ad</string>
     <string name="splash_ad">splash Ad</string>
     <string name="banner_ad_in_listview">Banner ads are displayed in ListView</string>
@@ -22,14 +27,13 @@
     <string name="format_load_failed">Failed to load: %s</string>
     <string name="format_load_success">load success,It takes %d seconds for ads to load.</string>
 
+    <string name="banner_ad_preload_mode">Banner AD Preload Mode</string>
+    <string name="banner_ad_normal_mode">Banner AD Normal Mode</string>
 
     <string name="list_item_banner_title">Banner test title ad</string>
     <string name="list_item_banner_desc">Banner test desc ad</string>
     <string name="list_item_native_title">native test title ad</string>
     <string name="list_item_native_desc">native test desc ad</string>
     <string name="other_platform_demo">Other platforms Demo</string>
-
-
-    <string name="admob_banner_id">ca-app-pub-4885562717451614/9675235882</string>
 
 </resources>

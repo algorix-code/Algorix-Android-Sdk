@@ -7,6 +7,6 @@ package com.tradplus.custom.adapter;
  */
 public interface AlxMetaInf {
 
-    String ADAPTER_VERSION = "4.0.0";
+    String ADAPTER_VERSION = "3.8.0";
 
 }

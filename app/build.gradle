@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.alxad.demo'
+    namespace 'com.alxad.sdk.demo'
     compileSdk {
         version = release(36)
     }

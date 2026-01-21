@@ -13,6 +13,7 @@ import com.alxad.api.AlxInterstitialADListener;
 import com.alxad.api.AlxSdkInitCallback;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.VersionInfo;
 import com.google.android.gms.ads.mediation.Adapter;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
@@ -20,7 +21,6 @@ import com.google.android.gms.ads.mediation.MediationConfiguration;
 import com.google.android.gms.ads.mediation.MediationInterstitialAd;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdCallback;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration;
-import com.google.android.gms.ads.VersionInfo;
 
 import org.json.JSONObject;
 

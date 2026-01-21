@@ -93,6 +93,9 @@ public class AlxRewardVideoAdapter extends CustomRewardVideoAdapter {
             if (serverExtras.containsKey("unitid")) {
                 unitid = (String) serverExtras.get("unitid");
             }
+            if (TextUtils.isEmpty(unitid)&&serverExtras.containsKey("slot_id")) {
+                unitid = (String) serverExtras.get("slot_id");
+            }
 
             if (serverExtras.containsKey("isdebug")) {
                 Object obj = serverExtras.get("isdebug");

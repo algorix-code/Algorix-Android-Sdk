@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Banner AD Preload Mode"
+                android:text="@string/banner_ad_preload_mode"
                 android:textColor="#fff"
                 android:textSize="16sp"
                 tools:ignore="InvalidId" />
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Banner AD Normal Mode"
+                android:text="@string/banner_ad_normal_mode"
                 android:textColor="#fff"
                 android:layout_marginTop="20dp"
                 android:textSize="16sp"

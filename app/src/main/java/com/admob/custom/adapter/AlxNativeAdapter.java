@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.alxad.api.AlxAdParam;
 import com.alxad.api.AlxAdSDK;
 import com.alxad.api.AlxImage;
-import com.alxad.api.AlxAdParam;
 import com.alxad.api.AlxSdkInitCallback;
 import com.alxad.api.nativead.AlxMediaView;
 import com.alxad.api.nativead.AlxNativeAd;
@@ -24,7 +24,7 @@ import com.alxad.api.nativead.AlxNativeAdView;
 import com.alxad.api.nativead.AlxNativeEventListener;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.VersionInfo;
 import com.google.android.gms.ads.mediation.Adapter;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
@@ -32,7 +32,7 @@ import com.google.android.gms.ads.mediation.MediationConfiguration;
 import com.google.android.gms.ads.mediation.MediationNativeAdCallback;
 import com.google.android.gms.ads.mediation.MediationNativeAdConfiguration;
 import com.google.android.gms.ads.mediation.NativeAdMapper;
-import com.google.android.gms.ads.VersionInfo;
+import com.google.android.gms.ads.nativead.NativeAd;
 
 import org.json.JSONObject;
 
