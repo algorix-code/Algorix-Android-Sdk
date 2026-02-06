@@ -46,8 +46,12 @@ public class AdConfig {
     public static final String TRAD_PLUS_NATIVE_AD = "D5A2CA3C35A0150E8090F9FF52ADAA1F";
     public static final String TRAD_PLUS_SPLASH_AD = "818FD9F494E4952CFF453F626B719E4F";
 
-    //Iron Source 平台广告配置信息
-    public static final String IRON_SOURCE_APP_KEY = "11ac644bd";
+    //IronSource 平台广告配置信息
+    public static final String IRON_SOURCE_APP_KEY = "2527c9595";
+    public static final String IRON_SOURCE_USER_ID = "e99b62fbe147";
+    public static final String IRON_SOURCE_BANNER_AD = "hu00pc2uzhsds923";
+    public static final String IRON_SOURCE_REWARD_VIDEO_AD = "mo251rqygjm8pb5w";
+    public static final String IRON_SOURCE_INTERSTITIAL_AD = "l7p3bbv8007y1fvd";
 
 
     //Max 平台广告配置信息

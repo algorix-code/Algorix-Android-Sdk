@@ -14,7 +14,7 @@ import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;
 
 public class InterstitialBannerActivity extends BaseActivity implements View.OnClickListener {
-    private static final String TAG = "AlxInterstitialBannerActivity";
+    private static final String TAG = "AlxInterstitialBanner";
 
     private TextView mTvTip;
     private TextView mTvShow;

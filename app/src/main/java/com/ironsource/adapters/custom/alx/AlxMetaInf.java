@@ -1,4 +1,4 @@
-package com.ironsource.adapters.custom.algorix;
+package com.ironsource.adapters.custom.alx;
 
 /**
  * 适配器版本信息
@@ -7,6 +7,6 @@ package com.ironsource.adapters.custom.algorix;
  */
 public interface AlxMetaInf {
 
-    String ADAPTER_VERSION = "3.8.2";
+    String ADAPTER_VERSION = "3.9.5";
 
 }

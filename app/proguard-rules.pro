@@ -23,7 +23,7 @@
 -dontwarn com.alxad.**
 -dontwarn com.admob.custom.adapter.**
 -dontwarn com.anythink.custom.adapter.**
--dontwarn com.ironsource.adapters.custom.algorix.**
+-dontwarn com.ironsource.adapters.custom.alx.**
 -dontwarn com.applovin.mediation.adapters.**
 -dontwarn com.mopub.mobileads.**
 -dontwarn com.tradplus.custom.adapter.**
@@ -31,7 +31,7 @@
 -keep class com.alxad.api.** {*;}
 -keep class com.admob.custom.adapter.** {*;}
 -keep class com.anythink.custom.adapter.** {*;}
--keep class com.ironsource.adapters.custom.algorix.** {*;}
+-keep class com.ironsource.adapters.custom.alx.** {*;}
 -keep class com.mopub.mobileads.** {*;}
 -keep class com.mopub.mobileads.** {*;}
 -keep class com.tradplus.custom.adapter.** {*;}

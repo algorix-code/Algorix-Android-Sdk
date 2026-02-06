@@ -1,4 +1,4 @@
-package com.ironsource.adapters.custom.algorix;
+package com.ironsource.adapters.custom.alx;
 
 
 import android.content.Context;
@@ -14,9 +14,9 @@ import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrors;
 
 import java.util.Map;
 
-public class AlgoriXCustomAdapter extends BaseAdapter {
+public class AlxCustomAdapter extends BaseAdapter {
 
-    private static final String TAG = "AlgoriXCustomAdapter";
+    private static final String TAG = "AlxCustomAdapter";
     private String unitid = "";
     private String appid = "";
     private String sid = "";
@@ -27,7 +27,7 @@ public class AlgoriXCustomAdapter extends BaseAdapter {
     @Override
     public void init(AdData adData, Context context, NetworkInitializationListener networkInitializationListener) {
         Log.d(TAG, "alx-ironsource-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
-        Log.i(TAG, "AlgoriX SDK Init");
+        Log.i(TAG, "Alx SDK Init");
 
         mNetworkInitializationListener = networkInitializationListener;
         if (parseServer(adData)) {

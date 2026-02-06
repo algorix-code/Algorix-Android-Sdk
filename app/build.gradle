@@ -53,7 +53,7 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.androidx.core.ktx
 
-    implementation 'com.github.bumptech.glide:glide:5.0.5'
+    implementation libs.glide
 
     //alx ad
     implementation 'io.github.algorixco:ads-sdk:3.9.5'
@@ -78,7 +78,7 @@ dependencies {
     implementation "com.applovin:applovin-sdk:13.3.1"
 
     //IronSource平台
-    implementation "com.ironsource.sdk:mediationsdk:7.3.0.1"
+    implementation "com.unity3d.ads-mediation:mediation-sdk:9.2.0"
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     //end
 

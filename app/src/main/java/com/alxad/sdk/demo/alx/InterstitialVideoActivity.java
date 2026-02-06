@@ -14,7 +14,7 @@ import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;
 
 public class InterstitialVideoActivity extends BaseActivity implements View.OnClickListener {
-    private static final String TAG = "AlxInterstitialVideoActivity";
+    private static final String TAG = "AlxInterstitialVideo";
 
     private TextView mTvTip;
     private TextView mTvShow;

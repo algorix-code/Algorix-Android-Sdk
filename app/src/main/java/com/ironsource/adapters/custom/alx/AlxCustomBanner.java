@@ -1,4 +1,4 @@
-package com.ironsource.adapters.custom.algorix;
+package com.ironsource.adapters.custom.alx;
 
 import android.app.Activity;
 import android.text.TextUtils;
@@ -16,14 +16,17 @@ import com.ironsource.mediationsdk.adunit.adapter.utility.AdData;
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType;
 import com.ironsource.mediationsdk.model.NetworkSettings;
 
-public class AlgoriXCustomBanner extends BaseBanner<AlgoriXCustomAdapter> {
-    public static final String TAG = "AlgoriXCustomBanner";
+/**
+ * Unity LevelPlay(IronSource) banner Adapter
+ */
+public class AlxCustomBanner extends BaseBanner<AlxCustomAdapter> {
+    public static final String TAG = "AlxCustomBanner";
 
-    AlgoriXCustomAdapter algoriXCustomAdapter = getNetworkAdapter();
+    AlxCustomAdapter alxCustomAdapter = getNetworkAdapter();
     private AlxBannerView mBannerView;
     private BannerAdListener mListener;
 
-    public AlgoriXCustomBanner(NetworkSettings networkSettings) {
+    public AlxCustomBanner(NetworkSettings networkSettings) {
         super(networkSettings);
     }
 
@@ -31,7 +34,7 @@ public class AlgoriXCustomBanner extends BaseBanner<AlgoriXCustomAdapter> {
     public void loadAd(final AdData adData, final Activity activity, ISBannerSize isBannerSize, BannerAdListener listener) {
         Log.d(TAG, "loadAd");
         mListener = listener;
-        algoriXCustomAdapter.init(adData, activity, new NetworkInitializationListener() {
+        alxCustomAdapter.init(adData, activity, new NetworkInitializationListener() {
             @Override
             public void onInitSuccess() {
                 String unitid = (String) adData.getConfiguration().get("unitid");

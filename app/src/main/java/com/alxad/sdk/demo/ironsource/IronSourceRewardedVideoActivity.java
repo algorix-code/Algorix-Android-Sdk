@@ -7,14 +7,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;
-import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
-import com.ironsource.mediationsdk.integration.IntegrationHelper;
-import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.model.Placement;
-import com.ironsource.mediationsdk.sdk.LevelPlayRewardedVideoListener;
+import com.unity3d.mediation.LevelPlayAdError;
+import com.unity3d.mediation.LevelPlayAdInfo;
+import com.unity3d.mediation.rewarded.LevelPlayReward;
+import com.unity3d.mediation.rewarded.LevelPlayRewardedAd;
+import com.unity3d.mediation.rewarded.LevelPlayRewardedAdListener;
 
 public class IronSourceRewardedVideoActivity extends BaseActivity implements View.OnClickListener {
 
@@ -23,23 +25,14 @@ public class IronSourceRewardedVideoActivity extends BaseActivity implements Vie
     private TextView mTvShow;
     private long startTime;
 
+    private LevelPlayRewardedAd mAd;
+
     @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_and_show);
         initView();
-        //IronSource.init(this, AdConfig.IRON_SOURCE_APP_KEY);
-        String advertisingId = IronSource.getAdvertiserId(IronSourceRewardedVideoActivity.this);
-        // we're using an advertisingId as the 'userId'
-        //initIronSource(APP_KEY, advertisingId);
-        Log.d(TAG, "advertisid : " + advertisingId);
-        IronSource.setAdaptersDebug(true);
-        IntegrationHelper.validateIntegration(this);
-        IronSource.setUserId(advertisingId);
-        IronSource.getAdvertiserId(this);
-        //Network Connectivity Status
-        IronSource.shouldTrackNetworkState(this, true);
     }
 
     public void initView() {
@@ -66,66 +59,76 @@ public class IronSourceRewardedVideoActivity extends BaseActivity implements Vie
         startTime = System.currentTimeMillis();
         mTvShow.setEnabled(false);
 
-        IronSource.setLevelPlayRewardedVideoListener(new LevelPlayRewardedVideoListener() {
+        mAd = new LevelPlayRewardedAd(AdConfig.IRON_SOURCE_REWARD_VIDEO_AD);
+        mAd.setListener(new LevelPlayRewardedAdListener() {
+
             @Override
-            public void onAdAvailable(AdInfo adInfo) {
-                Log.d(TAG, "onAdAvailable");
+            public void onAdLoaded(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                Log.d(TAG, "onAdLoaded");
                 Toast.makeText(getBaseContext(), getString(R.string.load_success), Toast.LENGTH_SHORT).show();
                 mTvTip.setText(getString(R.string.format_load_success, (System.currentTimeMillis() - startTime) / 1000));
                 mTvShow.setEnabled(true);
             }
 
             @Override
-            public void onAdUnavailable() {
-                Log.d(TAG, "onAdUnavailable");
-            }
-
-            @Override
-            public void onAdOpened(AdInfo adInfo) {
-                Log.d(TAG, "onAdOpened");
-            }
-
-            @Override
-            public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
-                Log.d(TAG, "onAdShowFailed: " + ironSourceError.getErrorCode()+";"+ironSourceError.getErrorMessage());
+            public void onAdLoadFailed(@NonNull LevelPlayAdError levelPlayAdError) {
+                Log.d(TAG, "onAdShowFailed: " + levelPlayAdError.getErrorCode() + ";" + levelPlayAdError.getErrorMessage());
                 Toast.makeText(getBaseContext(), getString(R.string.load_failed), Toast.LENGTH_SHORT).show();
-                mTvTip.setText(getString(R.string.format_load_failed, ironSourceError.getErrorMessage()));
+                mTvTip.setText(getString(R.string.format_load_failed, levelPlayAdError.getErrorMessage()));
                 mTvShow.setEnabled(false);
             }
 
             @Override
-            public void onAdClicked(Placement placement, AdInfo adInfo) {
-                Log.d(TAG, "onAdClicked");
+            public void onAdDisplayed(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                Log.d(TAG, "onAdDisplayed");
             }
 
             @Override
-            public void onAdRewarded(Placement placement, AdInfo adInfo) {
+            public void onAdRewarded(@NonNull LevelPlayReward levelPlayReward, @NonNull LevelPlayAdInfo levelPlayAdInfo) {
                 Log.d(TAG, "onAdRewarded");
             }
 
             @Override
-            public void onAdClosed(AdInfo adInfo) {
+            public void onAdDisplayFailed(@NonNull LevelPlayAdError levelPlayAdError, @NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayRewardedAdListener.super.onAdDisplayFailed(levelPlayAdError, levelPlayAdInfo);
+                Log.d(TAG, "onAdDisplayFailed:" + levelPlayAdError.getErrorMessage());
+            }
+
+            @Override
+            public void onAdClicked(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayRewardedAdListener.super.onAdClicked(levelPlayAdInfo);
+                Log.d(TAG, "onAdClicked");
+            }
+
+            @Override
+            public void onAdClosed(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayRewardedAdListener.super.onAdClosed(levelPlayAdInfo);
                 Log.d(TAG, "onAdClosed");
+            }
+
+            @Override
+            public void onAdInfoChanged(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayRewardedAdListener.super.onAdInfoChanged(levelPlayAdInfo);
+                Log.d(TAG, "onAdInfoChanged");
             }
         });
 
-        IronSource.loadRewardedVideo();
+        mAd.loadAd();
+
     }
 
 
     private void bnShow() {
-        if (IronSource.isRewardedVideoAvailable()) {
-            IronSource.showRewardedVideo();
+        if (mAd != null && mAd.isAdReady()) {
+            mAd.showAd(this);
         }
     }
 
     protected void onResume() {
         super.onResume();
-        IronSource.onResume(this);
     }
 
     protected void onPause() {
         super.onPause();
-        IronSource.onPause(this);
     }
 }

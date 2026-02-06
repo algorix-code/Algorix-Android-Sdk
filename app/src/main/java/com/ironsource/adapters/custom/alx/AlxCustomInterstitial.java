@@ -1,9 +1,11 @@
-package com.ironsource.adapters.custom.algorix;
+package com.ironsource.adapters.custom.alx;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.alxad.api.AlxInterstitialAD;
 import com.alxad.api.AlxInterstitialADListener;
@@ -15,29 +17,29 @@ import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType;
 import com.ironsource.mediationsdk.model.NetworkSettings;
 
 /**
- * IronSource 激励广告适配器
+ * Unity LevelPlay(IronSource) Interstitial Adapter
  */
-public class AlgoriXCustomInterstitial extends BaseInterstitial<AlgoriXCustomAdapter> {
+public class AlxCustomInterstitial extends BaseInterstitial<AlxCustomAdapter> {
 
-    private static final String TAG = "AlgoriXCustomInterstitial";
+    private static final String TAG = "AlxCustomInterstitial";
     private AlxInterstitialAD alxInterstitialAD;
     private String unitid = "";
-    AlgoriXCustomAdapter algoriXCustomAdapter = getNetworkAdapter();
+    AlxCustomAdapter alxCustomAdapter = getNetworkAdapter();
     InterstitialAdListener mInterstitialAdListener;
     private Context mContext;
 
-    public AlgoriXCustomInterstitial(NetworkSettings networkSettings) {
+    public AlxCustomInterstitial(NetworkSettings networkSettings) {
         super(networkSettings);
     }
 
     @SuppressLint("LongLogTag")
     @Override
-    public void loadAd(final AdData adData, Activity activity, InterstitialAdListener interstitialAdListener) {
+    public void loadAd(@NonNull AdData adData, @NonNull Context context, @NonNull InterstitialAdListener listener) {
         Log.d(TAG, "loadAd:");
-        mContext = activity;
+        mContext = context;
         try {
-            mInterstitialAdListener = interstitialAdListener;
-            algoriXCustomAdapter.init(adData, activity, new NetworkInitializationListener() {
+            mInterstitialAdListener = listener;
+            alxCustomAdapter.init(adData, context, new NetworkInitializationListener() {
                 @Override
                 public void onInitSuccess() {
                     unitid = (String) adData.getConfiguration().get("unitid");
@@ -87,7 +89,7 @@ public class AlgoriXCustomInterstitial extends BaseInterstitial<AlgoriXCustomAda
             @Override
             public void onInterstitialAdShow() {
                 if (mInterstitialAdListener != null) {
-                    mInterstitialAdListener.onAdShowSuccess();
+                    mInterstitialAdListener.onAdOpened();
                 }
             }
 
@@ -121,16 +123,10 @@ public class AlgoriXCustomInterstitial extends BaseInterstitial<AlgoriXCustomAda
 
     @SuppressLint("LongLogTag")
     @Override
-    public void showAd(AdData adData, InterstitialAdListener interstitialAdListener) {
-        if (mContext instanceof Activity) {
-            Activity activity = (Activity) mContext;
-            if (alxInterstitialAD != null) {
-                alxInterstitialAD.show(activity);
-            }
-        } else {
-            Log.e(TAG, "context is not an Activity");
+    public void showAd(@NonNull AdData adData, @NonNull Activity activity, @NonNull InterstitialAdListener listener) {
+        if (alxInterstitialAD != null) {
+            alxInterstitialAD.show(activity);
         }
-
     }
 
     @Override
@@ -139,7 +135,13 @@ public class AlgoriXCustomInterstitial extends BaseInterstitial<AlgoriXCustomAda
             return alxInterstitialAD.isReady();
         }
         return false;
+    }
 
+    @Override
+    public void destroyAd(@NonNull AdData adData) {
+        if (alxInterstitialAD != null) {
+            alxInterstitialAD.destroy();
+        }
     }
 
 }

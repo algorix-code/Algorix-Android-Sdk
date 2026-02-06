@@ -6,13 +6,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;
-import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.adunit.adapter.utility.AdInfo;
-import com.ironsource.mediationsdk.integration.IntegrationHelper;
-import com.ironsource.mediationsdk.logger.IronSourceError;
-import com.ironsource.mediationsdk.sdk.LevelPlayInterstitialListener;
+import com.unity3d.mediation.LevelPlayAdError;
+import com.unity3d.mediation.LevelPlayAdInfo;
+import com.unity3d.mediation.interstitial.LevelPlayInterstitialAd;
+import com.unity3d.mediation.interstitial.LevelPlayInterstitialAdListener;
 
 public class IronSourceInterstitialActivity extends BaseActivity implements View.OnClickListener {
 
@@ -21,20 +23,13 @@ public class IronSourceInterstitialActivity extends BaseActivity implements View
     private TextView mTvShow;
     private long startTime;
 
+    private LevelPlayInterstitialAd mAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_and_show);
         initView();
-        String advertisingId = IronSource.getAdvertiserId(IronSourceInterstitialActivity.this);
-        // we're using an advertisingId as the 'userId'
-        //initIronSource(APP_KEY, advertisingId);
-        Log.d(TAG, "advertisid : " + advertisingId);
-        IntegrationHelper.validateIntegration(this);
-        IronSource.setUserId(advertisingId);
-        IronSource.getAdvertiserId(this);
-        //Network Connectivity Status
-        IronSource.shouldTrackNetworkState(this, true);
     }
 
     private void initView() {
@@ -61,66 +56,61 @@ public class IronSourceInterstitialActivity extends BaseActivity implements View
         startTime = System.currentTimeMillis();
         mTvShow.setEnabled(false);
 
-        IronSource.setLevelPlayInterstitialListener(new LevelPlayInterstitialListener() {
+        mAd = new LevelPlayInterstitialAd(AdConfig.IRON_SOURCE_INTERSTITIAL_AD);
+        mAd.setListener(new LevelPlayInterstitialAdListener() {
+
             @Override
-            public void onAdReady(AdInfo adInfo) {
-                Log.d(TAG, "onAdReady");
+            public void onAdLoaded(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                Log.d(TAG, "onAdLoaded");
                 Toast.makeText(getBaseContext(), getString(R.string.load_success), Toast.LENGTH_SHORT).show();
                 mTvTip.setText(getString(R.string.format_load_success, (System.currentTimeMillis() - startTime) / 1000));
                 mTvShow.setEnabled(true);
             }
 
             @Override
-            public void onAdLoadFailed(IronSourceError ironSourceError) {
-                Log.d(TAG, "onAdLoadFailed: " + ironSourceError.getErrorCode()+";"+ironSourceError.getErrorMessage());
+            public void onAdLoadFailed(@NonNull LevelPlayAdError levelPlayAdError) {
+                Log.d(TAG, "onAdLoadFailed: " + levelPlayAdError.getErrorCode() + ";" + levelPlayAdError.getErrorMessage());
                 Toast.makeText(getBaseContext(), getString(R.string.load_failed), Toast.LENGTH_SHORT).show();
-                mTvTip.setText(getString(R.string.format_load_failed, ironSourceError.getErrorMessage()));
+                mTvTip.setText(getString(R.string.format_load_failed, levelPlayAdError.getErrorMessage()));
                 mTvShow.setEnabled(false);
             }
 
             @Override
-            public void onAdOpened(AdInfo adInfo) {
-                Log.d(TAG, "onAdOpened");
+            public void onAdDisplayed(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                Log.d(TAG, "onAdDisplayed");
             }
 
             @Override
-            public void onAdShowSucceeded(AdInfo adInfo) {
-                Log.d(TAG, "onAdShowSucceeded");
+            public void onAdDisplayFailed(@NonNull LevelPlayAdError levelPlayAdError, @NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayInterstitialAdListener.super.onAdDisplayFailed(levelPlayAdError, levelPlayAdInfo);
+                Log.d(TAG, "onAdDisplayFailed:" + levelPlayAdError.getErrorMessage());
             }
 
             @Override
-            public void onAdShowFailed(IronSourceError ironSourceError, AdInfo adInfo) {
-                Log.d(TAG, "onAdShowFailed: " + ironSourceError.getErrorCode()+";"+ironSourceError.getErrorMessage());
-            }
-
-            @Override
-            public void onAdClicked(AdInfo adInfo) {
+            public void onAdClicked(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayInterstitialAdListener.super.onAdClicked(levelPlayAdInfo);
                 Log.d(TAG, "onAdClicked");
             }
 
             @Override
-            public void onAdClosed(AdInfo adInfo) {
+            public void onAdClosed(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayInterstitialAdListener.super.onAdClosed(levelPlayAdInfo);
                 Log.d(TAG, "onAdClosed");
+            }
+
+            @Override
+            public void onAdInfoChanged(@NonNull LevelPlayAdInfo levelPlayAdInfo) {
+                LevelPlayInterstitialAdListener.super.onAdInfoChanged(levelPlayAdInfo);
             }
         });
 
-        IronSource.loadInterstitial();
+        mAd.loadAd();
     }
 
 
     private void bnShow() {
-        if (IronSource.isInterstitialReady()) {
-            IronSource.showInterstitial();
+        if (mAd != null && mAd.isAdReady()) {
+            mAd.showAd(this);
         }
-    }
-
-    protected void onResume() {
-        super.onResume();
-        IronSource.onResume(this);
-    }
-
-    protected void onPause() {
-        super.onPause();
-        IronSource.onPause(this);
     }
 }

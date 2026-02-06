@@ -3,10 +3,16 @@ package com.alxad.sdk.demo.ironsource;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseListViewActivity;
 import com.alxad.sdk.demo.R;
-import com.ironsource.mediationsdk.IronSource;
+import com.unity3d.mediation.LevelPlay;
+import com.unity3d.mediation.LevelPlayConfiguration;
+import com.unity3d.mediation.LevelPlayInitError;
+import com.unity3d.mediation.LevelPlayInitListener;
+import com.unity3d.mediation.LevelPlayInitRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IronSourceDemoListActivity extends BaseListViewActivity {
 
-    private static final String TAG = "IronSourceDemoListActivity";
+    private static final String TAG = "IronSourceDemoActivity";
     private static final AtomicBoolean isAdSDKInit = new AtomicBoolean(false);
 
 
@@ -51,11 +57,22 @@ public class IronSourceDemoListActivity extends BaseListViewActivity {
         Log.d(TAG, "IronSource SDK start initialize");
 
         //IronSource初始化
-        IronSource.init(this, AdConfig.IRON_SOURCE_APP_KEY,
-                IronSource.AD_UNIT.OFFERWALL,
-                IronSource.AD_UNIT.INTERSTITIAL,
-                IronSource.AD_UNIT.REWARDED_VIDEO,
-                IronSource.AD_UNIT.BANNER);
+        LevelPlayInitRequest initRequest = new LevelPlayInitRequest.Builder(AdConfig.IRON_SOURCE_APP_KEY)
+                .withUserId(AdConfig.IRON_SOURCE_USER_ID)
+                .build();
+        LevelPlayInitListener initListener = new LevelPlayInitListener() {
+
+            @Override
+            public void onInitSuccess(@NonNull LevelPlayConfiguration levelPlayConfiguration) {
+                Log.d(TAG, "onInitSuccess");
+            }
+
+            @Override
+            public void onInitFailed(@NonNull LevelPlayInitError levelPlayInitError) {
+                Log.d(TAG, "onInitFailed:"+levelPlayInitError.getErrorMessage());
+            }
+        };
+        LevelPlay.init(this.getApplicationContext(), initRequest, initListener);
     }
 
 }
