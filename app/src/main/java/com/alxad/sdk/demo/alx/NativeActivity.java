@@ -59,6 +59,8 @@ public class NativeActivity extends BaseActivity {
     private FrameLayout mAdContainer;
     private AlxNativeAd mNativeAd;
 
+    private AlxNativeAdView mNativeView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,10 +103,13 @@ public class NativeActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (mNativeView != null) {
+            mNativeView.destroy();
+        }
         if (mNativeAd != null) {
             mNativeAd.destroy();
         }
+        super.onDestroy();
     }
 
     private void showNativeAd() {
@@ -229,6 +234,8 @@ public class NativeActivity extends BaseActivity {
 
         // Register a native ad object.
         nativeView.setNativeAd(nativeAd);
+
+        mNativeView = nativeView;
 
         return nativeView;
     }
