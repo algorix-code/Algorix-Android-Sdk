@@ -18,7 +18,7 @@ Algorix SDK. To get started with the demo apps, follow the instructions below:
     dependencies {
     
         // Add the Algorix Android SDK    
-        implementation 'io.github.algorixco:ads-sdk:3.9.5'
+        implementation 'io.github.algorixco:ads-sdk:3.9.6'
     
     }
 
