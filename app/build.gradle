@@ -56,7 +56,8 @@ dependencies {
     implementation libs.glide
 
     //alx ad
-    implementation 'io.github.algorixco:ads-sdk:3.9.6'
+    implementation 'io.github.algorixco:ads-sdk:3.9.7'
+//    implementation files('libs/alx-sdk.3.9.7.aar')
 
     //admob 平台
     implementation "com.google.android.gms:play-services-ads:23.5.0"
