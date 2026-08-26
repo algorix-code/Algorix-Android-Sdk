@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.anythink.core.api.ATAdInfo;
-import com.anythink.core.api.AdError;
-import com.anythink.interstitial.api.ATInterstitial;
-import com.anythink.interstitial.api.ATInterstitialListener;
+import com.secmtp.sdk.core.api.ATAdInfo;
+import com.secmtp.sdk.core.api.AdError;
+import com.secmtp.sdk.interstitial.api.ATInterstitial;
+import com.secmtp.sdk.interstitial.api.ATInterstitialListener;
 import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;

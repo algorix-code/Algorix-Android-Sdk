@@ -12,18 +12,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.anythink.core.api.ATAdInfo;
-import com.anythink.core.api.AdError;
-import com.anythink.nativead.api.ATNative;
-import com.anythink.nativead.api.ATNativeAdView;
-import com.anythink.nativead.api.ATNativeDislikeListener;
-import com.anythink.nativead.api.ATNativeEventExListener;
-import com.anythink.nativead.api.ATNativeImageView;
-import com.anythink.nativead.api.ATNativeMaterial;
-import com.anythink.nativead.api.ATNativeNetworkListener;
-import com.anythink.nativead.api.ATNativePrepareExInfo;
-import com.anythink.nativead.api.ATNativePrepareInfo;
-import com.anythink.nativead.api.NativeAd;
+import com.secmtp.sdk.core.api.ATAdInfo;
+import com.secmtp.sdk.core.api.AdError;
+import com.secmtp.sdk.nativead.api.ATNative;
+import com.secmtp.sdk.nativead.api.ATNativeAdView;
+import com.secmtp.sdk.nativead.api.ATNativeDislikeListener;
+import com.secmtp.sdk.nativead.api.ATNativeEventExListener;
+import com.secmtp.sdk.nativead.api.ATNativeImageView;
+import com.secmtp.sdk.nativead.api.ATNativeMaterial;
+import com.secmtp.sdk.nativead.api.ATNativeNetworkListener;
+import com.secmtp.sdk.nativead.api.ATNativePrepareExInfo;
+import com.secmtp.sdk.nativead.api.ATNativePrepareInfo;
+import com.secmtp.sdk.nativead.api.NativeAd;
 import com.bumptech.glide.Glide;
 import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseActivity;
@@ -124,6 +124,16 @@ public class TopOnNativeActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onDeeplinkCallback(ATNativeAdView atNativeAdView, ATAdInfo atAdInfo, boolean b) {
                 Log.i(TAG, "onDeeplinkCallback");
+            }
+
+            @Override
+            public void onAdActRewardSuccess(ATAdInfo atAdInfo) {
+                Log.i(TAG, "onAdActRewardSuccess");
+            }
+
+            @Override
+            public void onAdActReward(ATAdInfo atAdInfo, int i) {
+                Log.i(TAG, "onAdActReward");
             }
 
             @Override

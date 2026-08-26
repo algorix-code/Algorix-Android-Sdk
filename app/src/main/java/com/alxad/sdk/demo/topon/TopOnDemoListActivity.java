@@ -3,7 +3,7 @@ package com.alxad.sdk.demo.topon;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.anythink.core.api.ATSDK;
+import com.secmtp.sdk.core.api.ATSDK;
 import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseListViewActivity;
 import com.alxad.sdk.demo.R;

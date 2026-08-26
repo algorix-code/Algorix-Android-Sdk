@@ -8,10 +8,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.anythink.banner.api.ATBannerListener;
-import com.anythink.banner.api.ATBannerView;
-import com.anythink.core.api.ATAdInfo;
-import com.anythink.core.api.AdError;
+import com.secmtp.sdk.banner.api.ATBannerListener;
+import com.secmtp.sdk.banner.api.ATBannerView;
+import com.secmtp.sdk.core.api.ATAdInfo;
+import com.secmtp.sdk.core.api.AdError;
 import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;

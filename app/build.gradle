@@ -62,15 +62,12 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads:23.5.0"
 
     //topon 平台
-    implementation "com.anythink.sdk:core-tpn:6.4.39"
-    implementation "com.anythink.sdk:nativead-tpn:6.4.39"
-    implementation "com.anythink.sdk:banner-tpn:6.4.39"
-    implementation "com.anythink.sdk:interstitial-tpn:6.4.39"
-    implementation "com.anythink.sdk:rewardedvideo-tpn:6.4.39"
-    implementation "com.anythink.sdk:splash-tpn:6.4.39"
+    implementation libs.ads.topon.core
+    implementation libs.ads.topon.adapter
+    implementation libs.ads.topon.smart
     //Androidx (Necessary)
 //    implementation "androidx.appcompat:appcompat:1.4.1"
-    implementation "androidx.browser:browser:1.4.0"
+    implementation "androidx.browser:browser:1.7.1"
 //    implementation "com.google.android.gms:play-services-ads:23.5.0" //上面已经有
     // end
 

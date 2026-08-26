@@ -6,6 +6,9 @@ coreKtx = "1.13.0"
 glide = "5.0.5"
 multidex = "2.0.1"
 recyclerview = "1.2.1"
+adsToponCore = "6.6.30.2"
+adsToponAdapter = "6.5.76.1.2"
+adsToponSmart = "6.5.76"
 
 [libraries]
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
@@ -14,6 +17,9 @@ androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 multidex = { module = "com.android.support:multidex", version.ref = "multidex" }
+ads-topon-core = { module = "com.anythink.sdk:core-tpn", version.ref = "adsToponCore" }
+ads-topon-adapter = { module = "com.anythink.sdk:adapter-tpn-sdm", version.ref = "adsToponAdapter" }
+ads-topon-smart = { module = "com.smartdigimkttech.sdk:smartdigimkttech-sdk", version.ref = "adsToponSmart" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

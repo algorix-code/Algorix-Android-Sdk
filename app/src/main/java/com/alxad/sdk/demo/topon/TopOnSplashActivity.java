@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
-import com.anythink.core.api.ATAdInfo;
-import com.anythink.core.api.AdError;
-import com.anythink.splashad.api.ATSplashAd;
-import com.anythink.splashad.api.ATSplashAdExtraInfo;
-import com.anythink.splashad.api.ATSplashAdListener;
+import com.secmtp.sdk.core.api.ATAdInfo;
+import com.secmtp.sdk.core.api.AdError;
+import com.secmtp.sdk.splashad.api.ATSplashAd;
+import com.secmtp.sdk.splashad.api.ATSplashAdExtraInfo;
+import com.secmtp.sdk.splashad.api.ATSplashAdListener;
 import com.alxad.sdk.demo.AdConfig;
 import com.alxad.sdk.demo.BaseActivity;
 import com.alxad.sdk.demo.R;

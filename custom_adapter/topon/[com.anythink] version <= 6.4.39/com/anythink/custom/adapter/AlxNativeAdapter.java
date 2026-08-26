@@ -17,163 +17,68 @@ import com.alxad.api.nativead.AlxNativeAdLoadedListener;
 import com.alxad.api.nativead.AlxNativeAdLoader;
 import com.alxad.api.nativead.AlxNativeAdView;
 import com.alxad.api.nativead.AlxNativeEventListener;
-import com.secmtp.sdk.core.api.ATBiddingListener;
-import com.secmtp.sdk.core.api.ATBiddingResult;
-import com.secmtp.sdk.core.api.MediationInitCallback;
-import com.secmtp.sdk.nativead.api.ATNativePrepareInfo;
-import com.secmtp.sdk.nativead.unitgroup.api.CustomNativeAd;
-import com.secmtp.sdk.nativead.unitgroup.api.CustomNativeAdapter;
+import com.anythink.core.api.ATAdConst;
+import com.anythink.core.api.ATBiddingListener;
+import com.anythink.core.api.ATBiddingNotice;
+import com.anythink.core.api.ATBiddingResult;
+import com.anythink.core.api.MediationInitCallback;
+import com.anythink.nativead.api.ATNativePrepareInfo;
+import com.anythink.nativead.unitgroup.api.CustomNativeAd;
+import com.anythink.nativead.unitgroup.api.CustomNativeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
- * Chinese: TopOn 信息流广告适配器
- * English: TopOn Native Ads Adapter
+ * TopOn 信息流广告适配器
  */
 public class AlxNativeAdapter extends CustomNativeAdapter {
-    private final String TAG = "AlxNativeAdapter";
+    private final String TAG = AlxNativeAdapter.class.getSimpleName();
 
     private String unitid = "";
     private String appid = "";
     private String sid = "";
     private String token = "";
+    private String host = "";
+    private Boolean isDebug = null;
 
     private ATBiddingListener mBiddingListener;
 
-    private void startLoadAd(final Context context) {
-        Log.d(TAG, "startLoadAd");
-        AlxNativeAdLoadedListener loadListener = new AlxNativeAdLoadedListener() {
-            @Override
-            public void onAdFailed(int errorCode, String errorMsg) {
-                Log.i(TAG, "onAdLoadedFail:" + errorCode + ";" + errorMsg);
-                if (mLoadListener != null) {
-                    mLoadListener.onAdLoadError(errorCode + "", errorMsg);
-                }
-            }
+    public void startBid(Context context) {
+        Log.d(TAG,"startBid ");
+        startAdLoad(context);
 
-            @Override
-            public void onAdLoaded(List<AlxNativeAd> ads) {
-                if (ads == null || ads.isEmpty()) {
-                    String error = "no fill";
-                    if (mLoadListener != null) {
-                        mLoadListener.onAdLoadError("100", error);
-                    }
-                    if (mBiddingListener != null) {
-                        mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail(error), null);
-                    }
-                    return;
-                }
-
-                AlgorixNativeAd[] result = new AlgorixNativeAd[ads.size()];
-                boolean isOk = false;
-                String error = "";
-                double price = 0;
-                try {
-                    for (int i = 0; i < ads.size(); i++) {
-                        AlxNativeAd item = ads.get(i);
-                        AlgorixNativeAd bean = new AlgorixNativeAd(context, item);
-                        bean.setAdData();
-                        result[i] = bean;
-                        price = item.getPrice();
-                        Log.d(TAG, "startBid  load success");
-                    }
-                    isOk = true;
-                } catch (Exception e) {
-                    error = e.getMessage();
-                    Log.e(TAG, "error:" + e.getMessage());
-                }
-                if (isOk) {
-                    if (mLoadListener != null) {
-                        Log.d(TAG, "load success");
-                        mLoadListener.onAdCacheLoaded(result);
-                    }
-                    if (mBiddingListener != null) {
-                        Log.d(TAG, "bidding load success: bid price = " + price);
-                        mBiddingListener.onC2SBiddingResultWithCache(AlxSdkInitManager.getBiddingSuccessBean(price), result[0]);
-                    }
-                } else {
-                    if (mLoadListener != null) {
-                        mLoadListener.onAdLoadError("101", error);
-                    }
-                    if (mBiddingListener != null) {
-                        mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail(error), null);
-                    }
-                }
-
-            }
-        };
-
-        AlxNativeAdLoader loader = new AlxNativeAdLoader.Builder(context, unitid).build();
-        loader.loadAd(new AlxAdParam.Builder().build(), loadListener);
     }
 
     @Override
-    public boolean startBiddingRequest(final Context context, Map<String, Object> serverExtra, Map<String, Object> localExtra, final ATBiddingListener biddingListener) {
-        Log.d(TAG, "startBiddingRequest");
-        AlxSdkInitManager.printSDKInfo(TAG);
-
+    public boolean startBiddingRequest(final Context context, Map<String, Object> serverExtra, Map<String, 	Object> localExtra, final ATBiddingListener biddingListener) {
+        //从serverExtra中获取后台配置的自定义平台的广告位ID
         mBiddingListener = biddingListener;
-        if (parseServer(serverExtra)) {
-            AlxSdkInitManager.getInstance().initSDK(context, serverExtra, new MediationInitCallback() {
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "AlxSdkInit success");
-                    startLoadAd(context);
-                }
-
-                @Override
-                public void onFail(String s) {
-                    Log.d(TAG, "AlxSdkInit fail : " + s);
-                    //通过ATBiddingListener，回调竞价失败
-                    if (mBiddingListener != null) {
-                        mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail(s), null);
-                    }
-                }
-            });
-        } else {
-            if (mBiddingListener != null) {
-                mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail("alx unitid | token | sid | appid is empty"), null);
-            }
-        }
-
+        loadCustomNetworkAd(context,serverExtra,localExtra);
+        //必须return true
         return true;
     }
 
-
     @Override
-    public void loadCustomNetworkAd(Context context, Map<String, Object> serverExtra, Map<String, Object> localExtras) {
-        Log.d(TAG, "loadCustomNetworkAd");
-        AlxSdkInitManager.printSDKInfo(TAG);
-
+    public void loadCustomNetworkAd(Context context, Map<String, Object> serverExtra, Map<String, Object> map1) {
+        Log.d(TAG, "alx-topon-adapter-version:" + AlxMetaInf.ADAPTER_VERSION);
+        Log.i(TAG, "loadCustomNetworkAd");
         if (parseServer(serverExtra)) {
-            AlxSdkInitManager.getInstance().initSDK(context, serverExtra, new MediationInitCallback() {
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "AlxSdkInit success");
-                    startLoadAd(context);
-                }
-
-                @Override
-                public void onFail(String s) {
-                    Log.d(TAG, "AlxSdkInit fail : " + s);
-                    //Chinese: 通过ATBiddingListener，回调竞价失败
-                    //English: With ATBiddingListener, the callback bid fails
-                    if (mLoadListener != null) {
-                        mLoadListener.onAdLoadError("", "alx unitid | token | sid | appid is empty.");
-                    }
-                }
-            });
+            initSdk(context,serverExtra);
         } else {
             if (mLoadListener != null) {
-                mLoadListener.onAdLoadError("", "alx unitid | token | sid | appid is empty..");
+                mLoadListener.onAdLoadError("", "alx host | unitid | token | sid | appid is empty.");
             }
         }
     }
 
     private boolean parseServer(Map<String, Object> serverExtras) {
         try {
+            if (serverExtras.containsKey("host")) {
+                host = (String) serverExtras.get("host");
+            }
             if (serverExtras.containsKey("appid")) {
                 appid = (String) serverExtras.get("appid");
             }
@@ -186,18 +91,144 @@ public class AlxNativeAdapter extends CustomNativeAdapter {
             if (serverExtras.containsKey("unitid")) {
                 unitid = (String) serverExtras.get("unitid");
             }
-            if (TextUtils.isEmpty(unitid) && serverExtras.containsKey("slot_id")) {
+            if (TextUtils.isEmpty(unitid)&&serverExtras.containsKey("slot_id")) {
                 unitid = (String) serverExtras.get("slot_id");
             }
+
+            if (serverExtras.containsKey("isdebug")) {
+                Object obj = serverExtras.get("isdebug");
+                String debug = null;
+                if (obj != null && obj instanceof String) {
+                    debug = (String) obj;
+                }
+                Log.e(TAG, "alx debug mode:" + debug);
+                if (debug != null) {
+                    if (debug.equalsIgnoreCase("true")) {
+                        isDebug = Boolean.TRUE;
+                    } else if (debug.equalsIgnoreCase("false")) {
+                        isDebug = Boolean.FALSE;
+                    }
+                }
+            }
         } catch (Exception e) {
-            Log.e(TAG, "alx parseServer error:" + e.getMessage());
+            e.printStackTrace();
         }
 
+
         if (TextUtils.isEmpty(unitid) || TextUtils.isEmpty(token) || TextUtils.isEmpty(sid) || TextUtils.isEmpty(appid)) {
-            Log.i(TAG, "alx unitid | token | sid | appid is empty");
+            Log.i(TAG, "alx  unitid | token | sid | appid is empty");
             return false;
         }
         return true;
+    }
+
+    private void initSdk(final Context context, Map<String, Object> serverExtra) {
+        AlxSdkInitManager.getInstance().initSDK(context, serverExtra, new MediationInitCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG,"AlxSdkInit success");
+                startBid(context);
+            }
+
+            @Override
+            public void onFail(String s) {
+                Log.d(TAG,"AlxSdkInit fail : "+s);
+                //通过ATBiddingListener，回调竞价失败
+                if (mBiddingListener != null) {
+                    mBiddingListener.onC2SBiddingResultWithCache(ATBiddingResult.fail(s), null);
+                }
+            }
+        });
+
+
+//        try {
+//            Log.i(TAG, "alx ver:" + AlxAdSDK.getNetWorkVersion() + " alx token: " + token + " alx appid: " + appid + " alx sid: " + sid);
+//
+//            if (isDebug != null) {
+//                AlxAdSDK.setDebug(isDebug.booleanValue());
+//            }
+//            AlxAdSDK.init(context, token, sid, appid, new AlxSdkInitCallback() {
+//                @Override
+//                public void onInit(boolean isOk, String msg) {
+//                    if (isOk){
+//                    startAdLoad(context);
+//                    }
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void startAdLoad(final Context context) {
+        AlxNativeAdLoadedListener loadListener = new AlxNativeAdLoadedListener() {
+            @Override
+            public void onAdFailed(int errorCode, String errorMsg) {
+                Log.i(TAG, "onAdLoadedFail:" + errorCode + ";" + errorMsg);
+                if (mLoadListener != null) {
+                    mLoadListener.onAdLoadError(errorCode + "", errorMsg);
+                }
+            }
+
+            @Override
+            public void onAdLoaded(List<AlxNativeAd> ads) {
+                if (ads == null || ads.isEmpty()) {
+                    if (mLoadListener != null) {
+                        mLoadListener.onAdLoadError("100", "no fill");
+                    }
+                    return;
+                }
+
+                AlgorixNativeAd[] result = new AlgorixNativeAd[ads.size()];
+                AlgorixNativeAd price = new AlgorixNativeAd(context,ads.get(0));
+                boolean isOk = false;
+                try {
+                    for (int i = 0; i < ads.size(); i++) {
+                        AlxNativeAd item = ads.get(i);
+                        AlgorixNativeAd bean = new AlgorixNativeAd(context, item);
+                        bean.setAdData();
+                        result[i] = bean;
+
+                        Log.d(TAG,"startBid  load success");
+
+                        //get price
+                        double bidPrice = item.getPrice();
+                        //get currency
+                        ATAdConst.CURRENCY currency = ATAdConst.CURRENCY.USD;
+
+                        //uuid
+                        String token = UUID.randomUUID().toString();
+
+                        //biddingNotice
+                        ATBiddingNotice biddingNotice = null;
+
+                        Log.d(TAG,"startBid  price "+bidPrice);
+                        Log.d(TAG,"startBid  token "+token);
+                        if (mBiddingListener != null) {
+                            mBiddingListener.onC2SBiddingResultWithCache(
+                                    ATBiddingResult.success(bidPrice, token, biddingNotice, currency), bean);
+                        }
+                    }
+                    isOk = true;
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
+                    isOk = false;
+                    if (mLoadListener != null) {
+                        mLoadListener.onAdLoadError("101", e.getMessage());
+                    }
+                }
+                if (isOk) {
+                    if (mLoadListener != null) {
+                        mLoadListener.onAdCacheLoaded(result);
+                    }
+                }
+
+            }
+        };
+
+        AlxNativeAdLoader loader = new AlxNativeAdLoader.Builder(context, unitid).build();
+        loader.loadAd(new AlxAdParam.Builder().build(), loadListener);
     }
 
     private class AlgorixNativeAd extends CustomNativeAd {
@@ -205,6 +236,7 @@ public class AlxNativeAdapter extends CustomNativeAdapter {
         private Context mContext;
 
         private AlxNativeAd mNativeAd;
+
         private AlxNativeAdView mAdContainer;
         private AlxMediaView mMediaView;
 
@@ -279,7 +311,7 @@ public class AlxNativeAdapter extends CustomNativeAdapter {
                 }
                 mAdContainer.setNativeAd(mNativeAd);
             } catch (Exception e) {
-                Log.e(TAG, "error:" + e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
 
@@ -322,7 +354,8 @@ public class AlxNativeAdapter extends CustomNativeAdapter {
                 }
                 return mMediaView;
             } catch (Exception e) {
-                Log.e(TAG, "error:" + e.getMessage());
+                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             return null;
         }
@@ -336,7 +369,8 @@ public class AlxNativeAdapter extends CustomNativeAdapter {
                     mMediaView = null;
                 }
             } catch (Exception e) {
-                Log.e(TAG, "error:" + e.getMessage());
+                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
         }
 
@@ -353,7 +387,8 @@ public class AlxNativeAdapter extends CustomNativeAdapter {
                     mAdContainer = null;
                 }
             } catch (Exception e) {
-                Log.e(TAG, "error:" + e.getMessage());
+                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
         }
 
